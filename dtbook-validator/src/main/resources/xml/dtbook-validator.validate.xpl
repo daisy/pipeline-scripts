@@ -63,7 +63,6 @@
         <p:pipe step="format-validation-status" port="result"/>
     </p:output>
     
-    <p:option name="output-dir"/>
     <p:option name="mathml-version"/>
     <p:option name="check-images"/>
     <p:option name="base-uri"/>

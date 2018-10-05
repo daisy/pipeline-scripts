@@ -68,6 +68,21 @@
         </p:input>
     </px:fileset-load>
 
+    <!--
+        Make sure that the base uri of the fileset is the directory containing the OPF. This should
+        normally eliminate any relative hrefs starting with "..", which is required for this step
+        to work.
+    -->
+    <px:fileset-rebase>
+        <p:input port="source">
+            <p:pipe step="main" port="source.fileset"/>
+        </p:input>
+        <p:with-option name="new-base" select="resolve-uri('.',base-uri(/*))">
+            <p:pipe step="opf" port="result"/>
+        </p:with-option>
+    </px:fileset-rebase>
+    <p:identity name="source.fileset"/>
+
 
     <p:group name="convert">
     <p:output port="result.fileset" primary="true"/>
@@ -111,7 +126,7 @@
             </p:output>
             <pxi:list-audio-clips name="audio-clips.inner">
                 <p:input port="fileset.in">
-                    <p:pipe step="main" port="source.fileset"/>
+                    <p:pipe step="source.fileset" port="result"/>
                 </p:input>
                 <p:input port="dtbooks">
                     <p:pipe port="result" step="dtbooks"/>
@@ -140,7 +155,7 @@
 
     <pxi:dtbook-to-html name="content-docs">
         <p:input port="fileset.in">
-            <p:pipe step="main" port="source.fileset"/>
+            <p:pipe step="source.fileset" port="result"/>
         </p:input>
         <p:input port="in-memory.in">
             <p:pipe port="result" step="dtbooks"/>
@@ -148,6 +163,10 @@
         <p:with-option name="output-dir" select="$content-dir"/>
         <p:with-option name="assert-valid" select="$assert-valid"/>
         <p:with-option name="chunk-size" select="$chunk-size"/>
+        <p:with-option name="filename"
+                       select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
+            <p:pipe step="opf" port="result"/>
+        </p:with-option>
     </pxi:dtbook-to-html>
     <p:sink/>
 

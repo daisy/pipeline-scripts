@@ -20,22 +20,18 @@
             </x:input>
             <x:input port="in-memory.in"/>
         </x:call>
-        <x:context label="The files in the result fileset">
-            <x:document type="port" port="fileset.out" select="/*/*"/>
+        <x:context label="The DAISY 2.02 fileset">
+            <x:document type="port" port="fileset.out"/>
         </x:context>
-        <x:expect label="The DAISY 2.02 fileset should contain all expected HTML-files, with the correct doctypes" type="compare">
+        <x:expect label="The DAISY 2.02 fileset"
+                  type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
             <x:document type="inline">
-                <d:file href="heftywater.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="ncc.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                <d:fileset>
+                    <d:file href="hefty-water/EPUB/heftywater.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="hefty-water/EPUB/ncc.html"  media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                </d:fileset>
             </x:document>
         </x:expect>
-        <!--<x:expect label="The fileset should consist of two files" type="xpath" test="count(/*/*)" equals="2"/>-->
-        <!--<x:expect label="The fileset should contain one image file with the href 'valentin.jpg'" type="xpath" test="(/*/*[@media-type='image/jpeg'])[1]/@href" equals="'valentin.jpg'"/>-->
-        <!--<x:expect label="The fileset should contain one HTML file with the href 'C00000.xhtml'" type="xpath" test="(/*/*[@media-type='application/xhtml+xml'])[1]/@href" equals="'C00000.xhtml'"/>-->
         <!--<x:context label="result HTML head">
             <x:document type="port" port="in-memory.out" select="/html:html/html:head/*[not(self::html:meta and @name='dcterms:modified')]"/>
         </x:context>
@@ -226,635 +222,170 @@
             </x:input>
             <x:input port="in-memory.in"/>
         </x:call>
-        <x:context label="The HTML-files in the result fileset">
-            <x:document type="port" port="fileset.out" select="//d:file[@media-type='application/xhtml+xml']"/>
+        <x:context label="The DAISY 2.02 fileset">
+            <x:document type="port" port="fileset.out"/>
         </x:context>
-        <x:expect label="The DAISY 2.02 fileset should contain all expected HTML-files, with the correct doctypes" type="compare">
-            <x:document type="inline">
-                <d:file href="copyright.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="titlepage.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="cover.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="preface_001.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="introduction_001.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="epigraph_001.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-overlay="chapter_001_overlay"
-                    media-type="application/xhtml+xml" href="chapter_001.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-overlay="chapter_002_overlay"
-                    media-type="application/xhtml+xml" href="chapter_002.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_003.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_004.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_005.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_006.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_007.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_008.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_009.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_010.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_011.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_012.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_013.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_014.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_015.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_016.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_017.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_018.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_019.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_020.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_021.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_022.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_023.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_024.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_025.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_026.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_027.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_028.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_029.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_030.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_031.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_032.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_033.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_034.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_035.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_036.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_037.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_038.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_039.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_040.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_041.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_042.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_043.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_044.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_045.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_046.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_047.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_048.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_049.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_050.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_051.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_052.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_053.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_054.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_055.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_056.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_057.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_058.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_059.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_060.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_061.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_062.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_063.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_064.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_065.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_066.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_067.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_068.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_069.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_070.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_071.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_072.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_073.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_074.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_075.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_076.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_077.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_078.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_079.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_080.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_081.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_082.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_083.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_084.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_085.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_086.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_087.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_088.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_089.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_090.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_091.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_092.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_093.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_094.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_095.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_096.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_097.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_098.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_099.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_100.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_101.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_102.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_103.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_104.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_105.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_106.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_107.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_108.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_109.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_110.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_111.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_112.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_113.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_114.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_115.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_116.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_117.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_118.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_119.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_120.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_121.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_122.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_123.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_124.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_125.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_126.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_127.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_128.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_129.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_130.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_131.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_132.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_133.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_134.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_135.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="chapter_136.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" media-type="application/xhtml+xml"
-                    href="toc-short.html"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="ncc.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
-                    doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+        <x:expect label="The DAISY 2.02 fileset"
+                  type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
+            <x:document type="inline">
+                <d:fileset>
+                    <d:file href="moby-dick-mo-20120214/OPS/fonts/STIXGeneral.otf" media-type="application/vnd.ms-opentype"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/fonts/STIXGeneralItalic.otf" media-type="application/vnd.ms-opentype"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/fonts/STIXGeneralBol.otf" media-type="application/vnd.ms-opentype"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/fonts/STIXGeneralBolIta.otf" media-type="application/vnd.ms-opentype"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/copyright.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/titlepage.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/cover.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/images/9780316000000.jpg" media-type="image/jpeg"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/css/stylesheet.css" media-type="text/css"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/images/Moby-Dick_FE_title_page.jpg" media-type="image/jpeg"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/preface_001.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/introduction_001.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/epigraph_001.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_001.html" media-overlay="chapter_001_overlay" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_001_overlay.smil" media-type="application/smil+xml" doctype-public="-//W3C//DTD SMIL 1.0//EN" doctype-system="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_002.html" media-overlay="chapter_002_overlay" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_002_overlay.smil" media-type="application/smil+xml" doctype-public="-//W3C//DTD SMIL 1.0//EN" doctype-system="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_003.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/audio/mobydick_001_002_melville.mp4" media-type="audio/mp4"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_004.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_005.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_006.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_007.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_008.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_009.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_010.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_011.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_012.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_013.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_014.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_015.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_016.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_017.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_018.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_019.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_020.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_021.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_022.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_023.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_024.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_025.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_026.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_027.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_028.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_029.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_030.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_031.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_032.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_033.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_034.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_035.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_036.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_037.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_038.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_039.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_040.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_041.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_042.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_043.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_044.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_045.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_046.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_047.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_048.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_049.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_050.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_051.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_052.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_053.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_054.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_055.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_056.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_057.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_058.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_059.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_060.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_061.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_062.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_063.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_064.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_065.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_066.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_067.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_068.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_069.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_070.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_071.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_072.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_073.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_074.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_075.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_076.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_077.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_078.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_079.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_080.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_081.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_082.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_083.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_084.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_085.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_086.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_087.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_088.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_089.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_090.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_091.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_092.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_093.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_094.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_095.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_096.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_097.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_098.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_099.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_100.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_101.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_102.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_103.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_104.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_105.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_106.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_107.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_108.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_109.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_110.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_111.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_112.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_113.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_114.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_115.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_116.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_117.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_118.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_119.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_120.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_121.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_122.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_123.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_124.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_125.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_126.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_127.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_128.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_129.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_130.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_131.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_132.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_133.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_134.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_135.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/chapter_136.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/toc-short.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="moby-dick-mo-20120214/OPS/ncc.html" media-type="application/xhtml+xml" doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                </d:fileset>
             </x:document>
         </x:expect>
-        <x:context label="The SMIL-files in the result fileset">
-            <x:document type="port" port="fileset.out" select="//d:file[@media-type='application/smil+xml']"/>
-        </x:context>
-        <x:expect label="The DAISY 2.02 fileset should contain the expected SMIL files, with the correct doctypes" type="compare">
-            <x:document type="inline">
-                <d:file href="chapter_001_overlay.smil" media-type="application/smil+xml" doctype-public="-//W3C//DTD SMIL 1.0//EN" doctype-system="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="chapter_002_overlay.smil" media-type="application/smil+xml" doctype-public="-//W3C//DTD SMIL 1.0//EN" doctype-system="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
-            </x:document>
-        </x:expect>
-        <x:context label="The audio files in the result fileset">
-            <x:document type="port" port="fileset.out" select="//d:file[starts-with(@media-type,'audio/')]"/>
-        </x:context>
-        <x:expect label="The DAISY 2.02 fileset should contain the expected audio files" type="compare">
-            <x:document type="inline" base-uri="temp-dir" xml:base="moby-dick-mo-20120214/">
-                <d:file href="audio/mobydick_001_002_melville.mp4" media-type="audio/mp4"/>
-            </x:document>
-        </x:expect>
-        <x:context label="The resource files in the result fileset (everything except HTML, SMIL and audio)">
-            <x:document type="port" port="fileset.out" select="//d:file[not(starts-with(@media-type,'audio/') or @media-type=('application/xhtml+xml','application/smil+xml'))]"/>
-        </x:context>
-        <x:expect label="The DAISY 2.02 fileset should contain the expected resource files" type="compare">
-            <x:document type="inline">
-                <d:file href="fonts/STIXGeneral.otf" media-type="application/vnd.ms-opentype"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="fonts/STIXGeneralItalic.otf" media-type="application/vnd.ms-opentype"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="fonts/STIXGeneralBol.otf" media-type="application/vnd.ms-opentype"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="fonts/STIXGeneralBolIta.otf" media-type="application/vnd.ms-opentype"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="images/9780316000000.jpg" media-type="image/jpeg"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="css/stylesheet.css" media-type="text/css"/>
-            </x:document>
-            <x:document type="inline">
-                <d:file href="images/Moby-Dick_FE_title_page.jpg" media-type="image/jpeg"/>
-            </x:document>
-        </x:expect>
-        <!--<x:expect label="The fileset should consist of two files" type="xpath" test="count(/*/*)" equals="2"/>-->
-        <!--<x:expect label="The fileset should contain one image file with the href 'valentin.jpg'" type="xpath" test="(/*/*[@media-type='image/jpeg'])[1]/@href" equals="'valentin.jpg'"/>-->
-        <!--<x:expect label="The fileset should contain one HTML file with the href 'C00000.xhtml'" type="xpath" test="(/*/*[@media-type='application/xhtml+xml'])[1]/@href" equals="'C00000.xhtml'"/>-->
         <!--<x:context label="result HTML head">
             <x:document type="port" port="in-memory.out" select="/html:html/html:head/*[not(self::html:meta and @name='dcterms:modified')]"/>
         </x:context>

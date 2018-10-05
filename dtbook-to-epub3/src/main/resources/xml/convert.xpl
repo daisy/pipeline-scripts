@@ -15,7 +15,7 @@
 		<p:pipe step="zedai-to-epub3" port="validation-status"/>
 	</p:output>
 
-	<p:input port="tts-config" sequence="true"/>
+	<p:input port="tts-config"/>
 
 	<p:option name="language" required="true"/>
 	<p:option name="assert-valid" required="true"/>
