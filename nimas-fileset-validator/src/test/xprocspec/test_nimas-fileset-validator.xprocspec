@@ -6,7 +6,14 @@
 
     <x:scenario label="greatpainters-text-files-only">
         <x:call step="px:nimas-fileset-validator">
-            <x:input port="source">
+            <x:input port="source.fileset">
+                <x:document type="inline">
+                    <d:fileset>
+                        <d:file href="../resources/greatpainters-text-files-only/speechgen.opf" media-type="application/oebps-package+xml"/>
+                    </d:fileset>
+                </x:document>
+            </x:input>
+            <x:input port="source.in-memory">
                 <x:document type="file" href="../resources/greatpainters-text-files-only/speechgen.opf"/>
             </x:input>
             <x:option name="base-uri" select="resolve-uri('../resources/greatpainters-text-files-only/speechgen.opf')"/>

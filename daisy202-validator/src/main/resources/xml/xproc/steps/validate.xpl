@@ -13,11 +13,9 @@
 
     <p:input port="fileset.in" primary="true"/>
     <p:input port="in-memory.in" sequence="true"/>
-    <p:input port="report.in" sequence="true">
-        <p:empty/>
-    </p:input>
 
     <p:option name="timeToleranceMs" select="500" px:type="xs:integer"/>
+    <p:option name="ncc" required="true"/>
 
     <p:output port="fileset.out" primary="true">
         <p:pipe port="fileset.in" step="main"/>
@@ -25,11 +23,16 @@
     <p:output port="in-memory.out" sequence="true">
         <p:pipe port="in-memory.in" step="main"/>
     </p:output>
-    <p:output port="report.out" sequence="true">
-        <p:pipe step="main" port="report.in"/>
-        <p:pipe step="report" port="result"/>
+    <p:output port="xml-report">
+        <p:pipe step="xml-report" port="result"/>
     </p:output>
-
+    <p:output port="html-report">
+        <p:pipe step="html-report" port="result"/>
+    </p:output>
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+        <p:pipe step="validation-status" port="result"/>
+    </p:output>
+    
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
@@ -478,4 +481,39 @@
     </p:group>
     <p:identity name="report"/>
 
+    <!-- ***************************************************** -->
+    <!-- REPORT(S) TO HTML -->
+    <!-- ***************************************************** -->
+    
+    <px:combine-validation-reports>
+        <p:with-option name="document-name" select="replace($ncc,'.*/','')">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="document-type" select="'DAISY 2.02'">
+            <p:empty/>
+        </p:with-option>
+        <p:with-option name="document-path" select="$ncc">
+            <p:empty/>
+        </p:with-option>
+    </px:combine-validation-reports>
+    <p:identity name="xml-report"/>
+    <px:validation-report-to-html toc="false"/>
+    <p:identity name="html-report"/>
+    <p:sink/>
+    <p:group name="validation-status">
+        <p:output port="result"/>
+        <p:for-each>
+            <p:iteration-source select="/d:document-validation-report/d:document-info/d:error-count">
+                <p:pipe port="result" step="xml-report"/>
+            </p:iteration-source>
+            <p:identity/>
+        </p:for-each>
+        <p:wrap-sequence wrapper="d:validation-status"/>
+        <p:add-attribute attribute-name="result" match="/*">
+            <p:with-option name="attribute-value" select="if (sum(/*/*/number(.))&gt;0) then 'error' else 'ok'"/>
+        </p:add-attribute>
+        <p:delete match="/*/node()"/>
+    </p:group>
+    <p:sink/>
+    
 </p:declare-step>

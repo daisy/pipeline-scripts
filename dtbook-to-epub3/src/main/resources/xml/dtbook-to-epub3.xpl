@@ -93,7 +93,6 @@ split up if they exceed the given maximum size.</p>
     <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
 
     <px:normalize-uri name="output-dir-uri">
         <p:with-option name="href" select="concat($output-dir,'/')"/>
@@ -121,48 +120,23 @@ split up if they exceed the given maximum size.</p>
             </p:input>
         </px:dtbook-load>
 
-	<p:choose name="load-tts-config">
+	<p:choose name="tts-config">
 	  <p:when test="$tts-config != ''">
 	    <p:xpath-context>
 	      <p:empty/>
 	    </p:xpath-context>
-	    <p:output port="result" primary="true"/>
+	    <p:output port="result"/>
 	    <p:load>
 	      <p:with-option name="href" select="$tts-config"/>
 	    </p:load>
 	  </p:when>
 	  <p:otherwise>
-	    <p:output port="result" primary="true">
+	    <p:output port="result">
 	      <p:inline>
 		<d:config/>
 	      </p:inline>
 	    </p:output>
 	    <p:sink/>
-	  </p:otherwise>
-	</p:choose>
-	<p:choose name="css-inlining">
-	  <p:when test="$audio = 'true'">
-	    <p:output port="result" primary="true"/>
-	    <px:inline-css-speech>
-	      <p:input port="source">
-	    	<p:pipe port="in-memory.out" step="load"/>
-	      </p:input>
-	      <p:input port="fileset.in">
-	    	<p:pipe port="fileset.out" step="load"/>
-	      </p:input>
-	      <p:input port="config">
-	    	<p:pipe port="result" step="load-tts-config"/>
-	      </p:input>
-	      <p:with-option name="content-type" select="'application/x-dtbook+xml'"/>
-	    </px:inline-css-speech>
-	  </p:when>
-	  <p:otherwise>
-	    <p:output port="result" primary="true"/>
-	    <p:identity>
-	      <p:input port="source">
-		<p:pipe port="in-memory.out" step="load"/>
-	      </p:input>
-	    </p:identity>
 	  </p:otherwise>
 	</p:choose>
 
@@ -171,10 +145,10 @@ split up if they exceed the given maximum size.</p>
 	    <p:pipe step="load" port="fileset.out"/>
 	  </p:input>
 	  <p:input port="source.in-memory">
-	    <p:pipe step="css-inlining" port="result"/>
+	    <p:pipe step="load" port="in-memory.out"/>
 	  </p:input>
 	  <p:input port="tts-config">
-	    <p:pipe port="result" step="load-tts-config"/>
+	    <p:pipe step="tts-config" port="result"/>
 	  </p:input>
 	  <p:with-option name="audio" select="$audio"/>
 	  <p:with-option name="language" select="$language"/>

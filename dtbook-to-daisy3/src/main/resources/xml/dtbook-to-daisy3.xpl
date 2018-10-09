@@ -81,7 +81,6 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
   <p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
-  <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
   <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl"/>
   <p:import href="dtbook-to-daisy3.convert.xpl"/>
 
@@ -153,15 +152,15 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
     </p:input>
   </px:fileset-join>
 
-  <p:choose name="loaded-tts-config">
+  <p:choose name="tts-config">
     <p:when test="$tts-config != ''">
-      <p:output port="result" primary="true"/>
+      <p:output port="result"/>
       <p:load>
 	<p:with-option name="href" select="$tts-config"/>
       </p:load>
     </p:when>
     <p:otherwise>
-      <p:output port="result" primary="true">
+      <p:output port="result">
 	<p:inline>
 	  <d:config/>
 	</p:inline>
@@ -170,44 +169,15 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
     </p:otherwise>
   </p:choose>
 
-  <p:choose name="css-inlining">
-    <p:xpath-context>
-      <p:empty/>
-    </p:xpath-context>
-    <p:when test="$audio = 'true'">
-      <p:output port="result" primary="true"/>
-      <px:inline-css-speech>
-	<p:input port="source">
-	  <p:pipe port="matched" step="first-dtbook"/>
-	</p:input>
-	<p:input port="fileset.in">
-	  <p:pipe port="fileset.out" step="load"/>
-	</p:input>
-	<p:input port="config">
-	  <p:pipe port="result" step="loaded-tts-config"/>
-	</p:input>
-	<p:with-option name="content-type" select="'application/x-dtbook+xml'"/>
-      </px:inline-css-speech>
-    </p:when>
-    <p:otherwise>
-      <p:output port="result" primary="true"/>
-      <p:identity>
-	<p:input port="source">
-	  <p:pipe port="matched" step="first-dtbook"/>
-	</p:input>
-      </p:identity>
-    </p:otherwise>
-  </p:choose>
-
   <px:dtbook-to-daisy3 name="convert">
-    <p:input port="in-memory.in">
-      <p:pipe port="result" step="css-inlining"/>
-    </p:input>
     <p:input port="fileset.in">
-      <p:pipe port="result" step="fileset.with-css"/>
+      <p:pipe step="fileset.with-css" port="result"/>
     </p:input>
-    <p:input port="config">
-      <p:pipe port="result" step="loaded-tts-config"/>
+    <p:input port="in-memory.in">
+      <p:pipe step="first-dtbook" port="matched"/>
+    </p:input>
+    <p:input port="tts-config">
+      <p:pipe step="tts-config" port="result"/>
     </p:input>
     <p:with-option name="publisher" select="$publisher"/>
     <p:with-option name="output-fileset-base" select="/c:result/string()">
@@ -225,9 +195,11 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
       <p:pipe port="in-memory.out" step="convert"/>
     </p:input>
   </px:fileset-store>
+
   <px:rm-audio-files cx:depends-on="store">
     <p:input port="source">
       <p:pipe port="audio-map" step="convert"/>
     </p:input>
   </px:rm-audio-files>
+
 </p:declare-step>
