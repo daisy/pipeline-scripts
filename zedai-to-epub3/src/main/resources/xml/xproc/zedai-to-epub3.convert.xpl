@@ -33,6 +33,9 @@
     <p:option name="output-dir" required="true"/>
     <p:option name="chunk-size" required="false" select="'-1'"/>
     <p:option name="audio" required="false" select="'false'"/>
+    <p:option name="process-css" required="false" select="'true'">
+        <p:documentation>Set to false to bypass aural CSS processing.</p:documentation>
+    </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-nav-utils/library.xpl"/>
@@ -44,6 +47,7 @@
     <p:import href="http://www.daisy.org/pipeline/modules/tts-helpers/library.xpl" />
     <p:import href="http://www.daisy.org/pipeline/modules/mediaoverlay-utils/library.xpl" />
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-tts/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
 
     <p:variable name="epub-dir" select="concat($output-dir,'epub/')"/>
     <p:variable name="content-dir" select="concat($epub-dir,'EPUB/')"/>
@@ -52,21 +56,17 @@
     <!-- GET ZEDAI FROM FILESET                                                  -->
     <!--=========================================================================-->
 
-    <p:documentation>Retreive the ZedAI docuent from the input fileset.</p:documentation>
-    <p:group name="zedai-input">
-        <p:output port="result" primary="true">
-            <p:pipe port="result" step="zedai-input.for-each"/>
-        </p:output>
+    <p:documentation>Retreive the ZedAI document from the input fileset.</p:documentation>
+    <p:group>
         <p:variable name="fileset-base" select="base-uri(/*)"/>
-        <p:for-each name="zedai-input.for-each">
+        <p:for-each>
             <p:iteration-source select="/*/*"/>
-            <p:output port="result" sequence="true"/>
             <p:choose>
                 <p:when test="/*/@media-type = 'application/z3998-auth+xml'">
                     <p:variable name="zedai-base" select="/*/resolve-uri(@href,base-uri(.))"/>
-                    <p:split-sequence name="zedai-input.for-each.split">
+                    <p:split-sequence name="split">
                         <p:input port="source">
-                            <p:pipe port="in-memory.in" step="main"/>
+                            <p:pipe step="main" port="in-memory.in"/>
                         </p:input>
                         <p:with-option name="test" select="concat('base-uri(/*) = &quot;',$zedai-base,'&quot;')"/>
                     </p:split-sequence>
@@ -75,7 +75,7 @@
                         <p:when test=". &gt; 0">
                             <p:identity>
                                 <p:input port="source">
-                                    <p:pipe port="matched" step="zedai-input.for-each.split"/>
+                                    <p:pipe step="split" port="matched"/>
                                 </p:input>
                             </p:identity>
                         </p:when>
@@ -100,6 +100,7 @@
                 </p:otherwise>
             </p:choose>
         </p:for-each>
+        <p:identity name="zedai"/>
         <p:count/>
         <p:choose>
             <p:when test=". = 0">
@@ -111,7 +112,6 @@
                         </p:inline>
                     </p:input>
                 </p:error>
-                <p:sink/>
             </p:when>
             <p:when test=". &gt; 1">
                 <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
@@ -122,14 +122,48 @@
                         </p:inline>
                     </p:input>
                 </p:error>
-                <p:sink/>
             </p:when>
             <p:otherwise>
-                <p:sink/>
+                <p:identity>
+                    <p:input port="source">
+                        <p:pipe step="zedai" port="result"/>
+                    </p:input>
+                </p:identity>
             </p:otherwise>
         </p:choose>
     </p:group>
+    <p:identity name="first-zedai"/>
 
+    <!--=========================================================================-->
+    <!-- CSS INLINING                                                            -->
+    <!--=========================================================================-->
+    <p:choose>
+        <p:xpath-context>
+            <p:empty/>
+        </p:xpath-context>
+        <p:when test="$audio='true' and $process-css='true'">
+            <px:inline-css-speech content-type="application/z3998-auth+xml">
+                <p:input port="source">
+                    <p:pipe step="first-zedai" port="result"/>
+                </p:input>
+                <p:input port="fileset.in">
+                    <p:pipe step="main" port="fileset.in"/>
+                </p:input>
+                <p:input port="config">
+                    <p:pipe step="main" port="tts-config"/>
+                </p:input>
+            </px:inline-css-speech>
+        </p:when>
+        <p:otherwise>
+            <p:identity>
+                <p:input port="source">
+                    <p:pipe step="first-zedai" port="result"/>
+                </p:input>
+            </p:identity>
+        </p:otherwise>
+    </p:choose>
+    <p:identity name="zedai-with-css"/>
+    
     <!--=========================================================================-->
     <!-- METADATA                                                                -->
     <!--=========================================================================-->
@@ -138,9 +172,6 @@
     <p:group name="metadata">
         <p:output port="result"/>
         <p:xslt>
-            <p:input port="source">
-                <p:pipe port="result" step="zedai-input"/>
-            </p:input>
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
@@ -167,7 +198,7 @@
         <p:variable name="result-basename" select="concat($content-dir,$zedai-basename,'.xhtml')"/>
         <p:xslt name="zedai-to-html.html-single">
             <p:input port="source">
-                <p:pipe port="result" step="zedai-input"/>
+                <p:pipe step="zedai-with-css" port="result"/>
             </p:input>
             <p:input port="stylesheet">
                 <p:document href="http://www.daisy.org/pipeline/modules/zedai-to-html/xslt/zedai-to-html.xsl"/>

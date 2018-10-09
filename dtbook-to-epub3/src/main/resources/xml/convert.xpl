@@ -26,12 +26,45 @@
 	<p:option name="output-dir" required="true"/>
 	<p:option name="temp-dir" required="true"/>
 	
+	<p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/library.xpl"/>
+
+	<!-- CSS inlining -->
+	<p:choose>
+		<p:xpath-context>
+			<p:empty/>
+		</p:xpath-context>
+		<p:when test="$audio = 'true'">
+			<px:inline-css-speech content-type="application/x-dtbook+xml">
+				<p:input port="source">
+					<p:pipe step="main" port="source.in-memory"/>
+				</p:input>
+				<p:input port="fileset.in">
+					<p:pipe step="main" port="source.fileset"/>
+				</p:input>
+				<p:input port="config">
+					<p:pipe step="main" port="tts-config"/>
+				</p:input>
+			</px:inline-css-speech>
+		</p:when>
+		<p:otherwise>
+			<p:identity>
+				<p:input port="source">
+					<p:pipe step="main" port="source.in-memory"/>
+				</p:input>
+			</p:identity>
+		</p:otherwise>
+	</p:choose>
+	<p:identity name="dtbook-with-css"/>
+	<p:sink/>
 	
 	<px:dtbook-to-zedai name="dtbook-to-zedai">
+		<p:input port="fileset.in">
+			<p:pipe step="main" port="source.fileset"/>
+		</p:input>
 		<p:input port="in-memory.in">
-			<p:pipe step="main" port="source.in-memory"/>
+			<p:pipe step="dtbook-with-css" port="result"/>
 		</p:input>
 		<p:with-option name="opt-output-dir" select="concat($output-dir,'zedai/')"/>
 		<p:with-option name="opt-zedai-filename" select="concat($output-name,'.xml')"/>
@@ -46,7 +79,7 @@
 	                                         'image/svg+xml','application/pls+xml',
 	                                         'audio/mpeg','audio/mp4','text/javascript'))]"/>
 
-	<px:zedai-to-epub3 name="zedai-to-epub3">
+	<px:zedai-to-epub3 name="zedai-to-epub3" process-css="false">
 		<p:input port="in-memory.in">
 			<p:pipe step="dtbook-to-zedai" port="in-memory.out"/>
 		</p:input>

@@ -35,12 +35,14 @@
                 </x:document>
             </x:input>
             <x:input port="in-memory.in"/>
+            <x:option name="ncc" select="resolve-uri('../../../../daisy202-to-epub3/src/test/resources/input/book1/ncc.html')"/>
         </x:call>
-        <x:context label="the report">
-            <x:document type="port" port="report.out"/>
+        <x:context label="the xml report">
+            <x:document type="port" port="xml-report"/>
         </x:context>
-        <x:expect label="the messages" type="xpath" test="every $doc in collection() satisfies $doc/d:message"/>
-        <x:expect label="there should be 15 of them" type="count" min="15" max="15"/>
+        <x:expect label="the messages" type="xpath"
+                  test="every $x in /d:document-validation-report/d:reports/d:report/* satisfies $x/self::d:message"/>
+        <x:expect label="there should be 15 of them" type="xpath" test="count(//d:message)" equals="15"/>
     </x:scenario>
     
 </x:description>

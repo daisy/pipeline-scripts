@@ -17,7 +17,7 @@
 			<x:input port="in-memory.in">
 				<x:document type="file" href="../resources/samples/shuffled_7019_xmldtbook_1.xml"/>
 			</x:input>
-			<x:input port="config">
+			<x:input port="tts-config">
 				<x:document type="inline">
 					<config>
 						<voice engine="mock-tts" name="mock" lang="fr" gender="male-adult"/>
