@@ -120,28 +120,20 @@
   <p:import href="http://www.daisy.org/pipeline/modules/css-speech/library.xpl"/>
 
 
-  <!-- Find the first DTBook file within the input documents. -->
+  <!-- Find the first and only DTBook file within the input documents. -->
   <p:group name="first-dtbook">
     <p:output port="result"/>
-    <p:group name="split">
-      <p:output port="result"/>
-      <p:variable name="dtbook-uri"
-                  select="resolve-uri(//*[@media-type='application/x-dtbook+xml'][1]/@href, base-uri(/*))">
+    <px:fileset-load media-types="application/x-dtbook+xml" name="load">
+      <p:input port="fileset">
         <p:pipe step="main" port="fileset.in"/>
-      </p:variable>
-      <p:split-sequence>
-        <p:input port="source">
-          <p:pipe step="main" port="in-memory.in"/>
-        </p:input>
-        <!-- TODO: do the URI normalization somewhere else -->
-        <p:with-option name="test"
-                       select="concat('replace(&quot;file:/&quot;, replace(base-uri(/*), &quot;///&quot;, &quot;/&quot;), &quot;&quot;)=&quot;',
-                               replace('file:/', replace($dtbook-uri, '///', '/'), ''), '&quot;')"/>
-      </p:split-sequence>
-    </p:group>
+      </p:input>
+      <p:input port="in-memory">
+        <p:pipe step="main" port="in-memory.in"/>
+      </p:input>
+    </px:fileset-load>
     <p:count/>
     <p:choose>
-      <p:when test=". = 0">
+      <p:when test=".=0">
         <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
           <p:input port="source">
             <p:inline>
@@ -150,10 +142,19 @@
           </p:input>
         </p:error>
       </p:when>
+      <p:when test=".&gt;1">
+        <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
+          <p:input port="source">
+            <p:inline>
+              <message>More than one DTBook found in fileset.</message>
+            </p:inline>
+          </p:input>
+        </p:error>
+      </p:when>
       <p:otherwise>
         <p:identity>
           <p:input port="source">
-            <p:pipe step="split" port="result"/>
+            <p:pipe step="load" port="result"/>
           </p:input>
         </p:identity>
       </p:otherwise>
