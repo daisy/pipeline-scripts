@@ -8,8 +8,15 @@
   
   <x:scenario label="simple">
     <x:call step="px:dtbook-to-pef">
-      <x:input port="source">
-        <x:document type="inline">
+      <x:input port="source.fileset">
+        <x:document type="inline" xml:base="file:/tmp/">
+          <d:fileset>
+            <d:file href="dtbook.xml" media-type="application/x-dtbook+xml"/>
+          </d:fileset>
+        </x:document>
+      </x:input>
+      <x:input port="source.in-memory">
+        <x:document type="inline" xml:base="file:/tmp/dtbook.xml">
           <dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" xml:lang="en-US" version="2005-3">
             <book>
               <level1>

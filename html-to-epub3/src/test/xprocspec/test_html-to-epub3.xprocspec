@@ -6,8 +6,15 @@
 
 	<x:scenario label="minimal">
 		<x:call step="px:html-to-epub3">
-			<x:input port="input">
-				<x:document type="inline">
+			<x:input port="input.fileset">
+				<x:document type="inline" xml:base="file:/tmp/">
+					<d:fileset>
+						<d:file href="foo.xhtml" media-type="application/xhtml+xml"/>
+					</d:fileset>
+				</x:document>
+			</x:input>
+			<x:input port="input.in-memory">
+				<x:document type="inline" xml:base="file:/tmp/foo.xhtml">
 					<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 						<head>
 							<meta charset="UTF-8"/>
@@ -32,7 +39,7 @@
 		          type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
 			<x:document type="inline">
 				<d:fileset>
-					<d:file href="output-dir/epub/EPUB/test_html-to-epub3.xhtml" media-type="application/xhtml+xml"/>
+					<d:file href="output-dir/epub/EPUB/foo.xhtml" media-type="application/xhtml+xml"/>
 					<d:file href="output-dir/epub/EPUB/toc.xhtml" media-type="application/xhtml+xml"/>
 					<d:file href="output-dir/epub/EPUB/package.opf" media-type="application/oebps-package+xml"/>
 					<d:file href="output-dir/epub/META-INF/container.xml"/>
@@ -40,7 +47,7 @@
 			</x:document>
 		</x:expect>
 		<x:context label="the result XHTML document">
-			<x:document type="port" port="in-memory.out" select="/*[base-uri()=resolve-uri('output-dir/epub/EPUB/test_html-to-epub3.xhtml')]"/>
+			<x:document type="port" port="in-memory.out" select="/*[base-uri()=resolve-uri('output-dir/epub/EPUB/foo.xhtml')]"/>
 		</x:context>
 		<x:expect label="the result XHTML document"
 		          type="custom" href="http://www.daisy.org/xprocspec/custom-assertion-steps.xpl" step="x:compare-except-ids">

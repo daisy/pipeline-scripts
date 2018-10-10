@@ -5,7 +5,8 @@
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 px:input-filesets="html"
                 px:output-filesets="epub3"
-                type="px:html-to-epub3.script" name="main">
+                type="px:html-to-epub3.script" name="main"
+                exclude-inline-prefixes="px c">
 
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
         <h1 px:role="name">HTML to EPUB 3</h1>
@@ -39,10 +40,12 @@
     </p:option>
 
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/epub3-ocf-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/html-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/mediatype-utils/library.xpl"/>
     <p:import href="html-to-epub3.convert.xpl"/>
 
     <px:normalize-uri name="output-dir-uri">
@@ -60,13 +63,36 @@
         <px:tokenize regex="\s+">
             <p:with-option name="string" select="$html"/>
         </px:tokenize>
-        <p:for-each>
-            <px:html-load name="html">
+        <p:for-each name="html">
+            <p:output port="result" sequence="true"/>
+            <px:html-load>
                 <p:with-option name="href" select="."/>
             </px:html-load>
         </p:for-each>
+        <p:group>
+            <p:for-each name="filesets">
+                <px:html-to-fileset/>
+                <p:insert position="first-child">
+                    <p:input port="insertion">
+                        <p:inline>
+                            <d:file media-type="application/xhtml+xml"/>
+                        </p:inline>
+                    </p:input>
+                </p:insert>
+                <p:add-attribute match="//d:file[1]" attribute-name="href">
+                    <p:with-option name="attribute-value" select="base-uri(/)">
+                        <p:pipe step="filesets" port="current"/>
+                    </p:with-option>
+                </p:add-attribute>
+            </p:for-each>
+            <px:fileset-join/>
+            <px:mediatype-detect/>
+        </p:group>
 
         <px:html-to-epub3 name="convert">
+            <p:input port="input.in-memory">
+                <p:pipe step="html" port="result"/>
+            </p:input>
             <p:with-option name="output-dir" select="$output-dir-uri">
                 <p:empty/>
             </p:with-option>
