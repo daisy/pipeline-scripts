@@ -126,9 +126,21 @@ If left blank, the locale information in the input document will be used to sele
     </p:option>
     
     <p:import href="zedai-to-pef.convert.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/braille/pef-utils/library.xpl"/>
-    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/braille/xml-to-pef/library.xpl">
+        <p:documentation>
+            px:xml-to-pef.store
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl">
+        <p:documentation>
+            px:tempdir
+        </p:documentation>
+    </p:import>
+    <p:import href="http://www.daisy.org/pipeline/modules/zedai-utils/library.xpl">
+        <p:documentation>
+            px:zedai-load
+        </p:documentation>
+    </p:import>
     
     <!-- =============== -->
     <!-- CREATE TEMP DIR -->
@@ -139,13 +151,23 @@ If left blank, the locale information in the input document will be used to sele
     </px:tempdir>
     <p:sink/>
     
+    <!-- ========== -->
+    <!-- LOAD ZEDAI -->
+    <!-- ========== -->
+    
+    <px:zedai-load name="load">
+        <p:input port="source">
+            <p:pipe step="main" port="source"/>
+        </p:input>
+    </px:zedai-load>
+    
     <!-- ============ -->
     <!-- ZEDAI TO PEF -->
     <!-- ============ -->
     
     <px:zedai-to-pef default-stylesheet="http://www.daisy.org/pipeline/modules/braille/zedai-to-pef/css/default.css">
-        <p:input port="source">
-            <p:pipe step="main" port="source"/>
+        <p:input port="source.in-memory">
+            <p:pipe step="load" port="in-memory.out"/>
         </p:input>
         <p:with-option name="stylesheet" select="$stylesheet"/>
         <p:with-option name="transform" select="$transform"/>

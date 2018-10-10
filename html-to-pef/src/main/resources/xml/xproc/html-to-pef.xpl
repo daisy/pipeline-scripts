@@ -132,12 +132,16 @@
     <px:html-load name="html" px:message="Loading HTML" px:progress=".03">
         <p:with-option name="href" select="$html"/>
     </px:html-load>
+    <px:html-to-fileset/>
     
     <!-- ============ -->
     <!-- HTML TO PEF -->
     <!-- ============ -->
     <px:html-to-pef name="convert" px:message="Converting from HTML to PEF" px:progress=".90"
                     default-stylesheet="http://www.daisy.org/pipeline/modules/braille/html-to-pef/css/default.css">
+        <p:input port="source.in-memory">
+            <p:pipe step="html" port="result"/>
+        </p:input>
         <p:with-option name="temp-dir" select="concat(string(/c:result),'convert/')">
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>

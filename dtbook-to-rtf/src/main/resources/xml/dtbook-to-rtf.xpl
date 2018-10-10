@@ -77,6 +77,7 @@
 	</p:option>
 
 	<p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+	<p:import href="http://www.daisy.org/pipeline/modules/dtbook-utils/library.xpl"/>
 	<p:import href="convert.xpl"/>
 
 	<px:normalize-uri name="output-dir-uri">
@@ -91,7 +92,12 @@
 			<p:pipe step="output-dir-uri" port="normalized"/>
 		</p:variable>
 
+		<px:dtbook-load name="load"/>
+		
 		<px:dtbook-to-rtf>
+			<p:input port="source.in-memory">
+				<p:pipe step="load" port="in-memory.out"/>
+			</p:input>
 			<p:with-option name="include-table-of-content" select="$include-table-of-content"/>
 			<p:with-option name="include-page-number" select="$include-page-number"/>
 			<p:with-option name="temp-dir" select="$temp-dir"/>
