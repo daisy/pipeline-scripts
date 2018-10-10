@@ -36,32 +36,23 @@
     
     <p:choose name="load">
         <p:when test="ends-with(lower-case($epub),'.epub')">
-            <p:output port="fileset.out" primary="true">
-                <p:pipe step="mediatype" port="result"/>
-            </p:output>
+            <p:output port="fileset.out" primary="true"/>
             <p:output port="in-memory.out" sequence="true">
-                <p:pipe step="load.fileset" port="result"/>
+                <p:empty/>
             </p:output>
             <px:fileset-unzip store-to-disk="true" name="unzip">
                 <p:with-option name="href" select="$epub"/>
                 <p:with-option name="unzipped-basedir" select="concat($temp-dir,'epub/')"/>
             </px:fileset-unzip>
             <p:sink/>
-            <px:mediatype-detect name="mediatype">
+            <px:mediatype-detect>
                 <p:input port="source">
                     <p:pipe step="unzip" port="fileset"/>
                 </p:input>
             </px:mediatype-detect>
-            <px:fileset-load name="load.fileset">
-                <p:input port="in-memory">
-                    <p:empty/>
-                </p:input>
-            </px:fileset-load>
         </p:when>
         <p:otherwise>
-            <p:output port="fileset.out" primary="true">
-                <p:pipe port="result" step="load.fileset"/>
-            </p:output>
+            <p:output port="fileset.out" primary="true"/>
             <p:output port="in-memory.out" sequence="true">
                 <p:pipe port="result" step="opf"/>
             </p:output>
@@ -84,7 +75,6 @@
                 FIXME: px:fileset-move should take care of this, but doesn't seem to work
             -->
             <p:label-elements match="d:file" attribute="original-href" label="@href"/>
-            <p:identity name="load.fileset"/>
         </p:otherwise>
     </p:choose>
     

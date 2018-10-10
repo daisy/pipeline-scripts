@@ -14,9 +14,7 @@
 					</d:fileset>
 				</x:document>
 			</x:input>
-			<x:input port="in-memory.in">
-				<x:document type="file" href="../resources/samples/shuffled_7019_xmldtbook_1.xml"/>
-			</x:input>
+			<x:input port="in-memory.in"/>
 			<x:input port="tts-config">
 				<x:document type="inline">
 					<config>
