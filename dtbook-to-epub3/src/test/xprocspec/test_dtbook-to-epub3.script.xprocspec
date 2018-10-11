@@ -35,24 +35,22 @@
             </x:document>
         </x:expect>
 		<x:context label="the temp directory">
-            <x:document type="directory" base-uri="temp-dir" href="minimal/temp-dir/" recursive="true"/>
+            <x:document type="directory" base-uri="temp-dir" href="minimal/temp-dir/epub3/out/epub" recursive="true"/>
 		</x:context>
         <x:expect label="the temp directory should contain the expanded EPUB 3" type="compare" >
             <x:document type="inline">
-				<c:directory name="temp-dir">
-					<c:directory name="epub">
-						<c:directory name="EPUB">
-							<c:file name="minimal-1.xhtml"/>
-							<c:file name="minimal-2.xhtml"/>
-							<c:file name="package.opf"/>
-							<c:file name="toc.xhtml"/>
-						</c:directory>
-						<c:directory name="META-INF">
-							<c:file name="container.xml"/>
-						</c:directory>
-						<c:file name="mimetype"/>
-					</c:directory>
-				</c:directory>
+                <c:directory name="epub">
+                    <c:directory name="EPUB">
+                        <c:file name="minimal-1.xhtml"/>
+                        <c:file name="minimal-2.xhtml"/>
+                        <c:file name="package.opf"/>
+                        <c:file name="toc.xhtml"/>
+                    </c:directory>
+                    <c:directory name="META-INF">
+                        <c:file name="container.xml"/>
+                    </c:directory>
+                    <c:file name="mimetype"/>
+                </c:directory>
             </x:document>
         </x:expect>
     </x:scenario>
@@ -252,7 +250,8 @@
             </x:document>
         </x:expect>
         <x:context label="the html document">
-            <x:document type="file" base-uri="temp-dir" href="dir-attribute/temp-dir/epub/EPUB/test_dtbook-to-epub3.script-1.xhtml"/>
+            <x:document type="file" base-uri="temp-dir"
+                        href="dir-attribute/output-dir/test_dtbook-to-epub3.script.epub!/EPUB/test_dtbook-to-epub3.script-1.xhtml"/>
         </x:context>
         <x:expect label="the result html document should have a 'dir' attribute" type="xpath" test="/*/@dir" equals="'rtl'"/>
     </x:scenario>
