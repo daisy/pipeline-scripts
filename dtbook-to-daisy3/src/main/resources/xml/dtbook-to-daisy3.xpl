@@ -18,11 +18,10 @@
     </a>
   </p:documentation>
 
-  <p:input port="source" primary="true" sequence="true" px:media-type="application/x-dtbook+xml">
+  <p:input port="source" primary="true" px:media-type="application/x-dtbook+xml">
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
-      <h2 px:role="name">DTBook file(s)</h2>
-      <p px:role="desc">One or more 2005-3 DTBook files to be transformed. In
-      the case of multiple files, the first one will be taken.</p>
+      <h2 px:role="name">DTBook file</h2>
+      <p px:role="desc">The 2005-3 DTBook file to be transformed.</p>
     </p:documentation>
   </p:input>
 
@@ -88,8 +87,6 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
     <p:with-option name="href" select="concat($output-dir,'/')"/>
   </px:normalize-uri>
   
-  <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
-
   <px:dtbook-load name="load"/>
 
   <p:choose name="tts-config">
