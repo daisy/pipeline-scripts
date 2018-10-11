@@ -89,68 +89,8 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
   </px:normalize-uri>
   
   <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
-  <p:sink/>
 
-  <px:dtbook-load name="load">
-    <p:input port="source">
-      <p:pipe step="main" port="source"/>
-    </p:input>
-  </px:dtbook-load>
-
-  <!-- Add the CSS stylesheets to the fileset -->
-  <px:fileset-create name="empty-fileset">
-    <p:with-option name="base" select="base-uri(/*)">
-      <p:pipe port="fileset.out" step="load"/>
-    </p:with-option>
-  </px:fileset-create>
-  <p:try>
-    <p:group>
-      <p:output port="result"/>
-      <p:variable name="fileset-base" select="base-uri(/*)">
-	<p:pipe port="fileset.out" step="load"/>
-      </p:variable>
-      <p:xslt name="get-css">
-	<p:with-param name="xhtml-link" select="'true'"/>
-	<p:input port="source">
-	  <p:pipe port="matched" step="first-dtbook"/>
-	</p:input>
-	<p:input port="stylesheet">
-	  <p:document href="http://www.daisy.org/pipeline/modules/css-utils/xml-to-css-uris.xsl"/>
-	</p:input>
-      </p:xslt>
-      <p:viewport match="//*[@href]">
-	<p:add-attribute attribute-name="original-href" match="/*">
-	  <p:with-option name="attribute-value" select="resolve-uri(/*/@href, $fileset-base)"/>
-	</p:add-attribute>
-      </p:viewport>
-    </p:group>
-    <p:catch>
-      <p:output port="result"/>
-      <px:message message="CSS stylesheet URI(s) are malformed." severity="WARNING"/>
-      <p:identity>
-	<p:input port="source">
-	  <p:empty/>
-	</p:input>
-      </p:identity>
-    </p:catch>
-  </p:try>
-  <p:for-each name="css-entries">
-    <p:output port="result"/>
-    <p:iteration-source select="//*[@original-href]"/>
-    <px:fileset-add-entry media-type="text/css">
-      <p:input port="source">
-	<p:pipe port="result" step="empty-fileset"/>
-      </p:input>
-      <p:with-option name="original-href" select="/*/@original-href"/>
-      <p:with-option name="href" select="/*/@original-href"/>
-    </px:fileset-add-entry>
-  </p:for-each>
-  <px:fileset-join name="fileset.with-css">
-    <p:input port="source">
-      <p:pipe port="result" step="css-entries"/>
-      <p:pipe port="fileset.out" step="load"/>
-    </p:input>
-  </px:fileset-join>
+  <px:dtbook-load name="load"/>
 
   <p:choose name="tts-config">
     <p:when test="$tts-config != ''">
@@ -171,10 +111,10 @@ When text-to-speech is enabled, the conversion may output a (incomplete) DAISY 3
 
   <px:dtbook-to-daisy3 name="convert">
     <p:input port="fileset.in">
-      <p:pipe step="fileset.with-css" port="result"/>
+      <p:pipe step="load" port="fileset.out"/>
     </p:input>
     <p:input port="in-memory.in">
-      <p:pipe step="first-dtbook" port="matched"/>
+      <p:pipe step="load" port="in-memory.out"/>
     </p:input>
     <p:input port="tts-config">
       <p:pipe step="tts-config" port="result"/>
