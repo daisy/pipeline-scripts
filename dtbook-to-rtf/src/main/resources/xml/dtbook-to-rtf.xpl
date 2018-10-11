@@ -2,7 +2,7 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
-                type="px:dtbook-to-rtf.script"
+                type="px:dtbook-to-rtf.script" name="main"
                 px:input-filesets="dtbook"
                 px:output-filesets="rtf">
 	
@@ -40,10 +40,10 @@
 		</dl>
 	</p:documentation>
 
-	<p:input port="source" primary="true" px:media-type="application/x-dtbook+xml" sequence="true">
+	<p:input port="source" primary="true" px:media-type="application/x-dtbook+xml">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<h2 px:role="name">DTBook file</h2>
-			<p px:role="desc">One 2005-3 DTBook files to be transformed.</p>
+			<p px:role="desc">The 2005-3 DTBook file to be transformed.</p>
 		</p:documentation>
 	</p:input>
 
@@ -83,21 +83,15 @@
 		<p:with-option name="href" select="concat($output-dir,'/')"/>
 	</px:normalize-uri>
 
-	<p:split-sequence initial-only="true" name="first-dtbook" test="position()=1"/>
-	<p:sink/>
-
 	<p:group>
 		<p:variable name="encoded-title" select="replace(replace(base-uri(/),'^.*/([^/]+)$','$1'),'\.[^\.]*$','')">
-			<p:pipe port="matched" step="first-dtbook"/>
+			<p:pipe step="main" port="source"/>
 		</p:variable>
 		<p:variable name="output-dir-final" select="/c:result/string()">
 			<p:pipe step="output-dir-uri" port="normalized"/>
 		</p:variable>
 
 		<px:dtbook-to-rtf>
-			<p:input port="source">
-				<p:pipe port="matched" step="first-dtbook"/>
-			</p:input>
 			<p:with-option name="include-table-of-content" select="$include-table-of-content"/>
 			<p:with-option name="include-page-number" select="$include-page-number"/>
 			<p:with-option name="temp-dir" select="$temp-dir"/>

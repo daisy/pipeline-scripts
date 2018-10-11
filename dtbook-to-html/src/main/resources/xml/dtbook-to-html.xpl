@@ -63,6 +63,7 @@ the given maximum size.</p>
         <p:with-option name="href" select="concat($output-dir,'/')"/>
     </px:normalize-uri>
     
+    <!-- get the HTML filename from the first DTBook -->
     <p:split-sequence name="first-dtbook" test="position()=1" initial-only="true"/>
     <p:sink/>
     
