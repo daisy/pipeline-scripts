@@ -46,16 +46,7 @@
             <p:pipe port="result" step="fileset"/>
         </p:output>
         <p:for-each>
-            <p:xslt>
-                <p:input port="stylesheet">
-                    <p:document
-                        href="http://www.daisy.org/pipeline/modules/fileset-utils/html-to-fileset.xsl"
-                    />
-                </p:input>
-                <p:input port="parameters">
-                    <p:empty/>
-                </p:input>
-            </p:xslt>
+            <px:html-to-fileset/>
         </p:for-each>
         <px:fileset-join/>
         <px:mediatype-detect name="fileset"/>

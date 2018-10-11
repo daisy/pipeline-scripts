@@ -497,23 +497,13 @@
         </p:with-option>
     </px:combine-validation-reports>
     <p:identity name="xml-report"/>
-    <px:validation-report-to-html toc="false"/>
-    <p:identity name="html-report"/>
+    <px:validation-report-to-html toc="false" name="html-report"/>
     <p:sink/>
-    <p:group name="validation-status">
-        <p:output port="result"/>
-        <p:for-each>
-            <p:iteration-source select="/d:document-validation-report/d:document-info/d:error-count">
-                <p:pipe port="result" step="xml-report"/>
-            </p:iteration-source>
-            <p:identity/>
-        </p:for-each>
-        <p:wrap-sequence wrapper="d:validation-status"/>
-        <p:add-attribute attribute-name="result" match="/*">
-            <p:with-option name="attribute-value" select="if (sum(/*/*/number(.))&gt;0) then 'error' else 'ok'"/>
-        </p:add-attribute>
-        <p:delete match="/*/node()"/>
-    </p:group>
+    <px:validation-status name="validation-status">
+        <p:input port="source">
+            <p:pipe step="xml-report" port="result"/>
+        </p:input>
+    </px:validation-status>
     <p:sink/>
     
 </p:declare-step>

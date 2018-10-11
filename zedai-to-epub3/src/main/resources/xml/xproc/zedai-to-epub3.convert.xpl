@@ -64,79 +64,16 @@
 
     <p:documentation>Retreive the ZedAI document from the input fileset.</p:documentation>
     <p:group>
-        <p:variable name="fileset-base" select="base-uri(/*)"/>
-        <p:for-each>
-            <p:iteration-source select="/*/*"/>
-            <p:choose>
-                <p:when test="/*/@media-type = 'application/z3998-auth+xml'">
-                    <p:variable name="zedai-base" select="/*/resolve-uri(@href,base-uri(.))"/>
-                    <p:split-sequence name="split">
-                        <p:input port="source">
-                            <p:pipe step="main" port="in-memory.in"/>
-                        </p:input>
-                        <p:with-option name="test" select="concat('base-uri(/*) = &quot;',$zedai-base,'&quot;')"/>
-                    </p:split-sequence>
-                    <p:count/>
-                    <p:choose>
-                        <p:when test=". &gt; 0">
-                            <p:identity>
-                                <p:input port="source">
-                                    <p:pipe step="split" port="matched"/>
-                                </p:input>
-                            </p:identity>
-                        </p:when>
-                        <p:otherwise>
-                            <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
-                                <!-- TODO: describe the error on the wiki and insert correct error code -->
-                                <p:input port="source">
-                                    <p:inline>
-                                        <message>Found ZedAI document in fileset but not in memory. Please load the ZedAI document into memory before converting it.</message>
-                                    </p:inline>
-                                </p:input>
-                            </p:error>
-                        </p:otherwise>
-                    </p:choose>
-                </p:when>
-                <p:otherwise>
-                    <p:identity>
-                        <p:input port="source">
-                            <p:empty/>
-                        </p:input>
-                    </p:identity>
-                </p:otherwise>
-            </p:choose>
-        </p:for-each>
-        <p:identity name="zedai"/>
-        <p:count/>
-        <p:choose>
-            <p:when test=". = 0">
-                <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
-                    <!-- TODO: describe the error on the wiki and insert correct error code -->
-                    <p:input port="source">
-                        <p:inline>
-                            <message>No XML documents with the ZedAI media type ('application/z3998-auth+xml') found in the fileset.</message>
-                        </p:inline>
-                    </p:input>
-                </p:error>
-            </p:when>
-            <p:when test=". &gt; 1">
-                <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
-                    <!-- TODO: describe the error on the wiki and insert correct error code -->
-                    <p:input port="source">
-                        <p:inline>
-                            <message>More than one XML document with the ZedAI media type ('application/z3998-auth+xml') found in the fileset; there can only be one ZedAI document.</message>
-                        </p:inline>
-                    </p:input>
-                </p:error>
-            </p:when>
-            <p:otherwise>
-                <p:identity>
-                    <p:input port="source">
-                        <p:pipe step="zedai" port="result"/>
-                    </p:input>
-                </p:identity>
-            </p:otherwise>
-        </p:choose>
+        <px:fileset-load media-types="application/z3998-auth+xml">
+            <p:input port="in-memory">
+                <p:pipe step="main" port="in-memory.in"/>
+            </p:input>
+        </px:fileset-load>
+        <!-- TODO: describe the error on the wiki and insert correct error code -->
+        <px:assert message="No XML documents with the ZedAI media type ('application/z3998-auth+xml') found in the fileset."
+                   test-count-min="1" error-code="PEZE00"/>
+        <px:assert message="More than one XML document with the ZedAI media type ('application/z3998-auth+xml') found in the fileset; there can only be one ZedAI document."
+                   test-count-max="1" error-code="PEZE00"/>
     </p:group>
     <p:identity name="first-zedai"/>
 
