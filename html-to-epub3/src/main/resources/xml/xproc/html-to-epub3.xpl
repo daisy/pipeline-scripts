@@ -70,20 +70,8 @@
             </px:html-load>
         </p:for-each>
         <p:group>
-            <p:for-each name="filesets">
+            <p:for-each>
                 <px:html-to-fileset/>
-                <p:insert position="first-child">
-                    <p:input port="insertion">
-                        <p:inline>
-                            <d:file media-type="application/xhtml+xml"/>
-                        </p:inline>
-                    </p:input>
-                </p:insert>
-                <p:add-attribute match="//d:file[1]" attribute-name="href">
-                    <p:with-option name="attribute-value" select="base-uri(/)">
-                        <p:pipe step="filesets" port="current"/>
-                    </p:with-option>
-                </p:add-attribute>
             </p:for-each>
             <px:fileset-join/>
             <px:mediatype-detect/>
