@@ -30,7 +30,13 @@
         <p:pipe step="validation-status" port="result"/>
     </p:output>
   
-    <p:option name="output-dir" required="true"/>
+    <p:option name="output-dir" required="true">
+        <p:documentation>Empty directory dedicated to this conversion.</p:documentation>
+    </p:option>
+    <p:option name="temp-dir" select="''">
+        <p:documentation>Empty directory dedicated to this conversion. May be left empty in which
+        case a temporary directory will be automaticall created.</p:documentation>
+    </p:option>
     <p:option name="chunk-size" required="false" select="'-1'"/>
     <p:option name="audio" required="false" select="'false'"/>
     <p:option name="process-css" required="false" select="'true'">
@@ -318,6 +324,7 @@
       </p:input>
       <p:with-option name="audio" select="$audio"/>
       <p:with-option name="output-dir" select="$output-dir"/>
+      <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:tts-for-epub3>
 
     <!--=========================================================================-->

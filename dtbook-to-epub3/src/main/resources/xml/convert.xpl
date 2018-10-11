@@ -141,7 +141,8 @@
 		<p:input port="tts-config">
 			<p:pipe step="main" port="tts-config"/>
 		</p:input>
-		<p:with-option name="output-dir" select="$temp-dir"/>
+		<p:with-option name="output-dir" select="concat($temp-dir,'epub3/out/')"/>
+		<p:with-option name="temp-dir" select="concat($temp-dir,'epub3/temp/')"/>
 		<p:with-option name="audio" select="$audio"/>
 		<p:with-option name="chunk-size" select="$chunk-size"/>
 	</px:zedai-to-epub3>
