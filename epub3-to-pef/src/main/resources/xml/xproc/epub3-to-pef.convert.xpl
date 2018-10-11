@@ -262,12 +262,11 @@
         </p:input>
     </p:xslt>
     
-    <p:add-attribute match="/*" attribute-name="xml:base">
-        <p:with-option name="attribute-value" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
+    <px:set-base-uri>
+        <p:with-option name="base-uri" select="replace(base-uri(/*),'[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],'.pef'))">
             <p:pipe port="result" step="opf"/>
         </p:with-option>
-    </p:add-attribute>
-    <p:delete match="/*/@xml:base"/>
+    </px:set-base-uri>
     <p:identity name="in-memory.out"/>
     
     <px:fileset-create>

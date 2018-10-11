@@ -123,7 +123,7 @@
   <!-- Find the first and only DTBook file within the input documents. -->
   <p:group name="first-dtbook">
     <p:output port="result"/>
-    <px:fileset-load media-types="application/x-dtbook+xml" name="load">
+    <px:fileset-load media-types="application/x-dtbook+xml">
       <p:input port="fileset">
         <p:pipe step="main" port="fileset.in"/>
       </p:input>
@@ -131,34 +131,8 @@
         <p:pipe step="main" port="in-memory.in"/>
       </p:input>
     </px:fileset-load>
-    <p:count/>
-    <p:choose>
-      <p:when test=".=0">
-        <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
-          <p:input port="source">
-            <p:inline>
-              <message>No DTBook document found.</message>
-            </p:inline>
-          </p:input>
-        </p:error>
-      </p:when>
-      <p:when test=".&gt;1">
-        <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEZE00">
-          <p:input port="source">
-            <p:inline>
-              <message>More than one DTBook found in fileset.</message>
-            </p:inline>
-          </p:input>
-        </p:error>
-      </p:when>
-      <p:otherwise>
-        <p:identity>
-          <p:input port="source">
-            <p:pipe step="load" port="result"/>
-          </p:input>
-        </p:identity>
-      </p:otherwise>
-    </p:choose>
+    <px:assert message="No DTBook document found." test-count-min="1" error-code="PEZE00"/>
+    <px:assert message="More than one DTBook found in fileset." test-count-max="1" error-code="PEZE00"/>
   </p:group>
 
   <!-- CSS inlining -->

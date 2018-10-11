@@ -179,72 +179,15 @@
     <!-- LOAD INPUT DTBOOKS -->
     <!-- =============================================================== -->
     <p:group name="dtbook-input">
-        <p:output port="result" primary="true" sequence="true">
-            <p:pipe port="result" step="dtbook-input.for-each"/>
-        </p:output>
-        <p:variable name="fileset-base" select="base-uri(/*)"/>
-        <p:for-each name="dtbook-input.for-each">
-            <p:iteration-source select="/*/*"/>
-            <p:output port="result" sequence="true"/>
-            <p:choose>
-                <p:when test="/*/@media-type = 'application/x-dtbook+xml'">
-                    <p:variable name="dtbook-base" select="resolve-uri(/*/@href,$fileset-base)"/>
-                    <p:split-sequence name="dtbook-input.for-each.split">
-                        <p:input port="source">
-                            <p:pipe port="in-memory.in" step="main"/>
-                        </p:input>
-                        <p:with-option name="test"
-                            select="concat('base-uri(/*) = &quot;',$dtbook-base,'&quot;')"/>
-                    </p:split-sequence>
-                    <p:count/>
-                    <p:choose>
-                        <p:when test=". &gt; 0">
-                            <p:identity>
-                                <p:input port="source">
-                                    <p:pipe port="matched" step="dtbook-input.for-each.split"/>
-                                </p:input>
-                            </p:identity>
-                        </p:when>
-                        <p:otherwise>
-                            <px:message>
-                                <p:with-option name="message"
-                                    select="concat('Input DTBook not in memory, loading from disk: ', $dtbook-base)"
-                                />
-                            </px:message>
-                            <p:load>
-                                <p:with-option name="href" select="$dtbook-base"/>
-                            </p:load>
-                        </p:otherwise>
-                    </p:choose>
-                    <p:delete match="/*/@xml:base"/>
-                </p:when>
-                <p:otherwise>
-                    <p:identity>
-                        <p:input port="source">
-                            <p:empty/>
-                        </p:input>
-                    </p:identity>
-                </p:otherwise>
-            </p:choose>
-        </p:for-each>
-        <p:count/>
-        <p:choose>
-            <p:when test=". = 0">
-                <p:error xmlns:err="http://www.w3.org/ns/xproc-error" code="PEDZ00">
-                    <!-- TODO: describe the error on the wiki and insert correct error code -->
-                    <p:input port="source">
-                        <p:inline>
-                            <message>No XML documents with the DTBook media type
-                                ('application/x-dtbook+xml') found in the fileset.</message>
-                        </p:inline>
-                    </p:input>
-                </p:error>
-                <p:sink/>
-            </p:when>
-            <p:otherwise>
-                <p:sink/>
-            </p:otherwise>
-        </p:choose>
+        <p:output port="result" sequence="true"/>
+        <px:fileset-load media-types="application/x-dtbook+xml">
+            <p:input port="in-memory">
+                <p:pipe step="main" port="in-memory.in"/>
+            </p:input>
+        </px:fileset-load>
+        <!-- TODO: describe the error on the wiki and insert correct error code -->
+        <px:assert message="No XML documents with the DTBook media type ('application/x-dtbook+xml') found in the fileset."
+                   test-count-min="1" error-code="PEZE00"/>
     </p:group>
 
     <!-- =============================================================== -->
