@@ -211,19 +211,19 @@
         </p:input>
     </p:xslt>
     
-    <odt:update-files name="update-files">
-        <p:input port="source">
+    <px:fileset-update name="update-files">
+        <p:input port="update">
             <p:pipe step="content" port="result"/>
             <p:pipe step="styles" port="result"/>
             <p:pipe step="meta" port="result"/>
         </p:input>
-        <p:input port="fileset.in">
+        <p:input port="source.fileset">
             <p:pipe step="template" port="fileset.out"/>
         </p:input>
-        <p:input port="in-memory.in">
+        <p:input port="source.in-memory">
             <p:pipe step="template" port="in-memory.out"/>
         </p:input>
-    </odt:update-files>
+    </px:fileset-update>
     
     <!-- ============ -->
     <!-- EMBED IMAGES -->
@@ -239,10 +239,10 @@
             </p:output>
             <odt:embed-images name="embed-images">
                 <p:input port="fileset.in">
-                    <p:pipe step="update-files" port="fileset.out"/>
+                    <p:pipe step="update-files" port="result.fileset"/>
                 </p:input>
                 <p:input port="in-memory.in">
-                    <p:pipe step="update-files" port="in-memory.out"/>
+                    <p:pipe step="update-files" port="result.in-memory"/>
                 </p:input>
                 <p:input port="original-fileset">
                     <p:pipe step="main" port="fileset.in"/>
@@ -251,10 +251,10 @@
         </p:when>
         <p:otherwise>
             <p:output port="fileset.out">
-                <p:pipe step="update-files" port="fileset.out"/>
+                <p:pipe step="update-files" port="result.fileset"/>
             </p:output>
             <p:output port="in-memory.out" sequence="true">
-                <p:pipe step="update-files" port="in-memory.out"/>
+                <p:pipe step="update-files" port="result.in-memory"/>
             </p:output>
             <p:sink>
                 <p:input port="source">

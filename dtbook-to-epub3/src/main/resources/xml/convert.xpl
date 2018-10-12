@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
-                xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
                 xmlns:d="http://www.daisy.org/ns/pipeline/data"
                 type="px:dtbook-to-epub3" version="1.0" name="main">
 
@@ -32,31 +31,6 @@
 	<p:import href="http://www.daisy.org/pipeline/modules/dtbook-to-zedai/library.xpl"/>
 	<p:import href="http://www.daisy.org/pipeline/modules/zedai-to-epub3/library.xpl"/>
 
-	<p:declare-step type="pxi:fileset-filter-in-memory" name="fileset-filter-in-memory">
-		<p:input port="fileset" primary="true"/>
-		<p:input port="in-memory" sequence="true"/>
-		<p:output port="result"/>
-		<px:fileset-create name="base" base="/"/>
-		<p:for-each>
-			<p:iteration-source>
-				<p:pipe step="fileset-filter-in-memory" port="in-memory"/>
-			</p:iteration-source>
-			<px:fileset-add-entry>
-				<p:with-option name="href" select="resolve-uri(base-uri(/*))"/>
-				<p:input port="source">
-					<p:pipe port="result" step="base"/>
-				</p:input>
-			</px:fileset-add-entry>
-		</p:for-each>
-		<px:fileset-join name="fileset-from-in-memory"/>
-		<px:fileset-intersect>
-			<p:input port="source">
-				<p:pipe step="fileset-filter-in-memory" port="fileset"/>
-				<p:pipe step="fileset-from-in-memory" port="result"/>
-			</p:input>
-		</px:fileset-intersect>
-	</p:declare-step>
-	
 	<!-- CSS inlining -->
 	<p:choose>
 		<p:xpath-context>
@@ -83,23 +57,21 @@
 			<p:sink/>
 			
 			<!-- combine with other documents from fileset -->
-			<pxi:fileset-filter-in-memory>
-				<p:input port="fileset">
+			<px:fileset-update name="updated">
+				<p:input port="source.fileset">
 					<p:pipe step="main" port="source.fileset"/>
 				</p:input>
-				<p:input port="in-memory">
+				<p:input port="source.in-memory">
 					<p:pipe step="main" port="source.in-memory"/>
 				</p:input>
-			</pxi:fileset-filter-in-memory>
-			<px:fileset-load not-media-types="application/x-dtbook+xml" name="resources">
-				<p:input port="in-memory">
-					<p:pipe step="main" port="source.in-memory"/>
+				<p:input port="update">
+					<p:pipe step="processed-xml" port="result"/>
 				</p:input>
-			</px:fileset-load>
+			</px:fileset-update>
+			<p:sink/>
 			<p:identity>
 				<p:input port="source">
-					<p:pipe step="processed-xml" port="result"/>
-					<p:pipe step="resources" port="result"/>
+					<p:pipe step="updated" port="result.in-memory"/>
 				</p:input>
 			</p:identity>
 		</p:when>
