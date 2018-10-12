@@ -107,6 +107,7 @@ even though the provided CSS is more specific.
     <p:import href="http://www.daisy.org/pipeline/modules/braille/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl"/>
     <p:import href="http://www.daisy.org/pipeline/modules/file-utils/library.xpl"/>
+    <p:import href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl"/>
     
     <!-- ================================================= -->
     <!-- Create a <c:param-set/> of the options            -->
@@ -149,6 +150,12 @@ even though the provided CSS is more specific.
             <p:pipe step="temp-dir" port="result"/>
         </p:with-option>
     </px:epub3-to-pef.load>
+    <px:fileset-load name="opf" media-types="application/oebps-package+xml">
+        <p:input port="in-memory">
+            <p:pipe step="load" port="in-memory.out"/>
+        </p:input>
+    </px:fileset-load>
+    <p:sink/>
     
     <!-- ============= -->
     <!-- EPUB 3 TO PEF -->
@@ -189,7 +196,7 @@ even though the provided CSS is more specific.
     <px:epub3-to-pef.store px:message="Storing PEF" px:progress=".05">
         <p:with-option name="epub" select="$epub"/>
         <p:input port="opf">
-            <p:pipe step="load" port="opf"/>
+            <p:pipe step="opf" port="result"/>
         </p:input>
         <p:input port="obfl">
             <p:pipe step="convert" port="obfl"/>
