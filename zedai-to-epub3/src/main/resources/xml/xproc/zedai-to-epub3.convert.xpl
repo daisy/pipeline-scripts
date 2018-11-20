@@ -23,6 +23,10 @@
         <p:pipe port="result" step="in-memory.result"/>
     </p:output>
 
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+        <p:pipe step="validation-status" port="result"/>
+    </p:output>
+  
     <p:option name="output-dir" required="true"/>
     <p:option name="audio" required="false" select="'false'"/>
 
@@ -543,5 +547,15 @@
             </p:otherwise>
         </p:choose>
     </p:for-each>
+
+    <!--=========================================================================-->
+    <!-- Status								 -->
+    <!--=========================================================================-->
+
+    <p:rename match="/*" new-name="d:validation-status" name="validation-status">
+        <p:input port="source">
+            <p:pipe step="tts" port="status"/>
+        </p:input>
+    </p:rename>
 
 </p:declare-step>

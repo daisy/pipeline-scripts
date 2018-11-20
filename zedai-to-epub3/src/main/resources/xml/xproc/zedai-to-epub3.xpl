@@ -19,6 +19,16 @@
         </p:documentation>
     </p:input>
 
+    <p:output port="validation-status" px:media-type="application/vnd.pipeline.status+xml">
+      <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+        <h2 px:role="name">Status</h2>
+        <p px:role="desc" xml:space="preserve">Whether or not the conversion was successful.
+
+When text-to-speech is enabled, the conversion may output a (incomplete) EPUB 3 publication even if the text-to-speech process has errors.</p>
+      </p:documentation>
+      <p:pipe step="load-convert-store" port="validation-status"/>
+    </p:output>
+
     <p:option name="output-dir" required="true" px:output="result" px:type="anyDirURI">
         <p:documentation xmlns="http://www.w3.org/1999/xhtml">
             <h2 px:role="name">EPUB</h2>
@@ -84,7 +94,10 @@
     </p:xslt>
     <p:sink/>
 
-    <p:group>
+    <p:group name="load-convert-store">
+        <p:output port="validation-status">
+          <p:pipe step="convert" port="validation-status"/>
+        </p:output>
         <p:variable name="output-dir-uri" select="/*/@href">
             <p:pipe port="result" step="output-dir-uri"/>
         </p:variable>
