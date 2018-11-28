@@ -248,9 +248,8 @@
                 </p:with-option>
             </p:add-attribute>
         </p:for-each>
-        <p:identity name="generated-ncc.body"/>
-
         <p:wrap-sequence wrapper="body" wrapper-namespace="http://www.w3.org/1999/xhtml"/>
+        <p:identity name="generated-ncc.body"/>
         <p:wrap-sequence wrapper="html" wrapper-namespace="http://www.w3.org/1999/xhtml">
             <p:input port="source">
                 <p:pipe port="result" step="generated-ncc.head"/>

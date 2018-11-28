@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:px="http://www.daisy.org/ns/pipeline/xproc"
+               xmlns:pxi="http://www.daisy.org/ns/pipeline/xproc/internal"
+               xmlns:c="http://www.w3.org/ns/xproc-step"
+               xmlns:d="http://www.daisy.org/ns/pipeline/data"
+               xmlns:html="http://www.w3.org/1999/xhtml">
+    
+    <x:script>
+        <p:declare-step version="1.0" type="pxi:epub3-to-daisy202-and-validate">
+            <p:input port="epub3.fileset"/>
+            <p:output port="daisy202.fileset">
+                <p:pipe step="convert" port="fileset.out"/>
+            </p:output>
+            <p:output port="daisy202.in-memory" sequence="true">
+                <p:pipe step="convert" port="in-memory.out"/>
+            </p:output>
+            <p:output port="validation-status">
+                <p:pipe step="validate" port="validation-status"/>
+            </p:output>
+            <p:import href="../../main/resources/xml/xproc/library.xpl"/>
+            <p:import href="http://www.daisy.org/pipeline/modules/daisy202-validator/library.xpl"/>
+            <px:epub3-to-daisy202 name="convert">
+                <p:input port="in-memory.in">
+                    <p:empty/>
+                </p:input>
+            </px:epub3-to-daisy202>
+            <px:daisy202-validator name="validate" ncc="file:/foo">
+                <p:input port="in-memory.in">
+                    <p:pipe step="convert" port="in-memory.out"/>
+                </p:input>
+            </px:daisy202-validator>
+            <p:sink/>
+        </p:declare-step>
+    </x:script>
+    
+    <x:scenario label="hefty-water">
+        <x:call step="pxi:epub3-to-daisy202-and-validate">
+            <x:input port="epub3.fileset">
+                <x:document type="inline" xml:base="hefty-water/">
+                    <d:fileset>
+                        <d:file href="mimetype" media-type="text/plain"/>
+                        <d:file href="META-INF/container.xml" media-type="application/xml"/>
+                        <d:file href="EPUB/package.opf" media-type="application/oebps-package+xml"/>
+                        <d:file href="EPUB/nav.xhtml" media-type="application/xhtml+xml"/>
+                        <d:file href="EPUB/heftywater.xhtml" media-type="application/xhtml+xml"/>
+                    </d:fileset>
+                </x:document>
+            </x:input>
+        </x:call>
+        <x:context label="The status">
+            <x:document type="port" port="validation-status"/>
+        </x:context>
+        <x:expect label="The status" type="compare">
+            <x:document type="inline">
+                <d:validation-status result="error"/>
+            </x:document>
+        </x:expect>
+        <x:context label="The DAISY 2.02 fileset">
+            <x:document type="port" port="daisy202.fileset"/>
+        </x:context>
+        <x:expect label="The DAISY 2.02 fileset"
+                  type="custom" href="http://www.daisy.org/pipeline/modules/fileset-utils/library.xpl" step="x:fileset-compare">
+            <x:document type="inline">
+                <d:fileset>
+                    <d:file href="hefty-water/EPUB/heftywater.html" media-type="application/xhtml+xml"
+                            doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+                            doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="hefty-water/EPUB/ncc.html"  media-type="application/xhtml+xml"
+                            doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
+                            doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                </d:fileset>
+            </x:document>
+        </x:expect>
+        <x:context label="The NCC">
+            <x:document type="port" port="daisy202.in-memory"
+                        select="/*[base-uri()=resolve-uri('hefty-water/EPUB/ncc.html',$test-base-uri)]/html:body"/>
+        </x:context>
+        <x:expect label="The NCC" type="compare">
+            <x:document type="inline" select="/*/html:body">
+                <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+                    <body>
+                        <h1>
+                            <a href="/heftywater.xhtml#title">Hefty Water</a>
+                        </h1>
+                        <h2>
+                            <a href="/heftywater.xhtml#d1683e27">The Switch</a>
+                        </h2>
+                        <h2>
+                            <a href="/heftywater.xhtml#d1683e93">The Source</a>
+                        </h2>
+                        <h2>
+                            <a href="/heftywater.xhtml#d1683e110">Hefty Ruby Water</a>
+                        </h2>
+                    </body>
+                </html>
+            </x:document>
+        </x:expect>
+    </x:scenario>
+    
+</x:description>
