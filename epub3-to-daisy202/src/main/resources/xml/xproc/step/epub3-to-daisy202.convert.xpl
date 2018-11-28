@@ -243,7 +243,10 @@
                 </p:with-option>
             </p:wrap-sequence>
             <p:add-attribute match="/*/html:a" attribute-name="href">
-                <p:with-option name="attribute-value" select="concat(substring(/*/base-uri(),$ncc-base-dir-string-length),'#',/*/@id)">
+                <p:with-option name="attribute-value"
+                               select="replace(
+                                         concat(substring(/*/base-uri(),$ncc-base-dir-string-length + 1),'#',/*/@id),
+                                         '.xhtml(#|$)','.html$1')">
                     <p:pipe port="current" step="ncc-items"/>
                 </p:with-option>
             </p:add-attribute>
