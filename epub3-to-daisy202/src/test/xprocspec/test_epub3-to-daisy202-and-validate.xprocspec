@@ -11,10 +11,10 @@
         <p:declare-step version="1.0" type="pxi:epub3-to-daisy202-and-validate">
             <p:input port="epub3.fileset"/>
             <p:output port="daisy202.fileset">
-                <p:pipe step="convert" port="fileset.out"/>
+                <p:pipe step="convert" port="result.fileset"/>
             </p:output>
             <p:output port="daisy202.in-memory" sequence="true">
-                <p:pipe step="convert" port="in-memory.out"/>
+                <p:pipe step="convert" port="result.in-memory"/>
             </p:output>
             <p:output port="validation-status">
                 <p:pipe step="validate" port="validation-status"/>
@@ -22,19 +22,22 @@
             <p:import href="../../main/resources/xml/xproc/library.xpl"/>
             <p:import href="http://www.daisy.org/pipeline/modules/daisy202-validator/library.xpl"/>
             <px:epub3-to-daisy202 name="convert">
-                <p:input port="in-memory.in">
+                <p:input port="source.in-memory">
                     <p:empty/>
                 </p:input>
             </px:epub3-to-daisy202>
             <px:daisy202-validator name="validate" ncc="file:/foo">
                 <p:input port="in-memory.in">
-                    <p:pipe step="convert" port="in-memory.out"/>
+                    <p:pipe step="convert" port="result.in-memory"/>
                 </p:input>
             </px:daisy202-validator>
             <p:sink/>
         </p:declare-step>
     </x:script>
     
+    <!--
+        FIXME: generated ids make test brittle
+    -->
     <x:scenario label="hefty-water">
         <x:call step="pxi:epub3-to-daisy202-and-validate">
             <x:input port="epub3.fileset">
@@ -67,6 +70,9 @@
                     <d:file href="hefty-water/EPUB/heftywater.html" media-type="application/xhtml+xml"
                             doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
                             doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
+                    <d:file href="hefty-water/EPUB/heftywater.smil" media-type="application/smil+xml"
+                            doctype-public="-//W3C//DTD SMIL 1.0//EN"
+                            doctype-system="http://www.w3.org/TR/REC-SMIL/SMIL10.dtd"/>
                     <d:file href="hefty-water/EPUB/ncc.html"  media-type="application/xhtml+xml"
                             doctype-public="-//W3C//DTD XHTML 1.0 Transitional//EN"
                             doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"/>
@@ -82,16 +88,16 @@
                 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
                     <body>
                         <h1>
-                            <a href="heftywater.html#title">Hefty Water</a>
+                            <a href="heftywater.smil#par_title">Hefty Water</a>
                         </h1>
                         <h2>
-                            <a href="heftywater.html#d1683e27">The Switch</a>
+                            <a href="heftywater.smil#par_d1408e27">The Switch</a>
                         </h2>
                         <h2>
-                            <a href="heftywater.html#d1683e93">The Source</a>
+                            <a href="heftywater.smil#par_d1408e93">The Source</a>
                         </h2>
                         <h2>
-                            <a href="heftywater.html#d1683e110">Hefty Ruby Water</a>
+                            <a href="heftywater.smil#par_d1408e110">Hefty Ruby Water</a>
                         </h2>
                     </body>
                 </html>
