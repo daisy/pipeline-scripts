@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+    <groupId>org.daisy.pipeline.modules</groupId>
+    <artifactId>scripts-parent</artifactId>
+    <version>1.11.2-SNAPSHOT</version>
+    <relativePath>../parent/</relativePath>
+  </parent>
+  
+  <groupId>org.daisy.pipeline.modules</groupId>
+  <artifactId>dtbook-to-odt</artifactId>
+  <version>1.1.3-SNAPSHOT</version>
+  <packaging>bundle</packaging>
+  
+  <name>DAISY Pipeline 2 module :: DTBook to ODT</name>
+  
+  <dependencies>
+    <!--
+        runtime dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>asciimath-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>dtbook-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>file-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>odt-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.daisy.pipeline.modules</groupId>
+      <artifactId>image-utils</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!--
+        test dependencies
+    -->
+    <dependency>
+      <groupId>org.daisy.pipeline.build</groupId>
+      <artifactId>modules-test-helper</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <excludes>
+          <exclude>templates/**</exclude>
+          <exclude>xml/dtbook-to-odt.xpl</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>xml/dtbook-to-odt.xpl</include>
+        </includes>
+        <filtering>true</filtering>
+      </resource>
+      <resource>
+        <directory>target/generated-resources</directory>
+        <includes>
+          <include>templates/**</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>shell-maven-plugin</artifactId>
+        <version>1.0-beta-1</version>
+        <executions>
+          <execution>
+            <id>generate-ott</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>shell</goal>
+            </goals>
+            <configuration>
+              <workDir>${project.basedir}</workDir>
+              <chmod>true</chmod>
+              <script>
+                #!/bin/sh
+                zip_odt() {
+                  cd $1
+                  zip -0 -X $2 mimetype
+                  zip -r $2 * -x mimetype
+                }
+                rm -rf target/generated-resources/templates
+                mkdir -p target/generated-resources/templates
+                for template in $(ls src/main/resources/templates); do
+                  (zip_odt src/main/resources/templates/${template} $(pwd)/target/generated-resources/templates/${template})
+                done
+              </script>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-sources</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <resources>
+                <resource>
+                  <directory>src</directory>
+                  <includes>
+                    <include>test/xprocspec/test_content.xprocspec.css</include>
+                    <include>test/xprocspec/orion3.jpg</include>
+                    <include>test/xprocspec/orion62.jpg</include>
+                  </includes>
+                </resource>
+              </resources>
+              <outputDirectory>${project.build.directory}/doc/src/</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.daisy.pipeline.build</groupId>
+        <artifactId>modules-build-helper</artifactId>
+        <executions>
+          <execution>
+            <id>htmlize-sources</id>
+            <configuration>
+              <sourceDirectory>${project.basedir}</sourceDirectory>
+              <includes>
+                src/main/resources/META-INF/catalog.xml,
+                src/main/resources/**/*.xpl,
+                src/main/resources/**/*.xsl,
+                src/main/resources/templates/,
+                src/test/xprocspec/test_content.xprocspec
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>package-doc-jar</id>
+            <configuration>
+              <includes>
+                <include>**/*.md</include>
+                <include>**/*.html</include>
+                <include>src/test/xprocspec/test_content.xprocspec.css</include>
+                <include>src/test/xprocspec/orion3.jpg</include>
+                <include>src/test/xprocspec/orion62.jpg</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

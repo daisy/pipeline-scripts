@@ -1,19 +1,11 @@
 # Maven
 target/
-
-# Make
-/.modules
-.unchecked
-
-# xspec
-xspec/*html
+dependency-reduced-pom.xml
 
 # Eclipse
 .classpath
 .project
 .settings/
-.externalToolBuilders
-maven-eclipse.xml
 
 # OS Files
 .DS_Store
@@ -24,3 +16,16 @@ maven-eclipse.xml
 Icon?
 ehthumbs.db
 Thumbs.db
+
+#vim files
+.*.sw?
+.*~
+
+# XSpec result files
+**/xspec/*-result.html
+
+# Temp directory
+**/temp/
+
+# misc
+dtbook-validator/src/test/dtbook_has_errors_maybe_dont_share.xml
