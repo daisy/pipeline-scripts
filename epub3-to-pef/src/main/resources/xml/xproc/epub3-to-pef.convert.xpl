@@ -319,15 +319,15 @@
                     <p:empty/>
                 </p:input>
             </p:xslt>
-            <p:add-attribute match="/*" attribute-name="xml:base">
-                <p:with-option name="attribute-value"
+            <px:set-base-uri>
+                <p:with-option name="base-uri"
                                select="replace(
                                          base-uri(/*),
                                          '[^/]+$',concat(((/*/opf:metadata/dc:identifier[not(@refines)]/text()), 'pef')[1],
                                          '.pef'))">
                     <p:pipe port="result" step="opf"/>
                 </p:with-option>
-            </p:add-attribute>
+            </px:set-base-uri>
         </p:when>
         <p:otherwise>
             <p:identity/>
