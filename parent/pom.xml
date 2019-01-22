@@ -12,7 +12,7 @@
 
   <groupId>org.daisy.pipeline.modules</groupId>
   <artifactId>scripts-parent</artifactId>
-  <version>1.11.2</version>
+  <version>1.11.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Scripts Parent POM</name>
@@ -210,8 +210,4 @@
       </plugins>
     </pluginManagement>
   </build>
-
-  <scm>
-    <tag>v1.11.2</tag>
-  </scm>
 </project>
