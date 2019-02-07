@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:opf="http://www.idpf.org/2007/opf" xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" exclude-result-prefixes="#all" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+                xmlns:html="http://www.w3.org/1999/xhtml"
+                xmlns:opf="http://www.idpf.org/2007/opf"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:dcterms="http://purl.org/dc/terms/"
+                exclude-result-prefixes="#all">
 
     <xsl:param name="modified" select="format-dateTime(
         adjust-dateTime-to-timezone(current-dateTime(),xs:dayTimeDuration('PT0H')),
@@ -26,27 +32,82 @@
             <meta name="viewport" content="width=device-width"/>
 
             <xsl:for-each select="*[not(self::opf:*) and not(self::dc:title)]">
-                <meta name="{name()}" content="{normalize-space(.)}">
-                    <xsl:copy-of select="@scheme|@http-equiv|@lang|@dir"/>
-                    <xsl:if test="@xml:lang">
-                        <xsl:attribute name="lang" select="@xml:lang"/>
-                    </xsl:if>
-                </meta>
+                <xsl:call-template name="meta">
+                    <xsl:with-param name="name" select="name()"/>
+                </xsl:call-template>
             </xsl:for-each>
 
             <xsl:for-each select="opf:meta[@property and not(@refines) and not(@property='dcterms:modified')]">
                 <!-- NOTE on fidelity loss: meta elements that refine other meta elements are lost -->
                 <!-- NOTE on fidelity loss: the @role attribute on meta elements are lost -->
-                <meta name="{@property}" content="{normalize-space(.)}">
+                <xsl:call-template name="meta">
+                    <xsl:with-param name="name" select="@property"/>
+                </xsl:call-template>
+            </xsl:for-each>
+            
+            <meta name="dcterms:modified" content="{$modified}"/>
+        </head>
+    </xsl:template>
+
+    <xsl:template name="meta">
+        <xsl:param name="name" required="yes"/>
+        <xsl:choose>
+            <xsl:when test="$name=$allowed-meta or starts-with($name,'prod:')">
+                <meta name="{$name}" content="{normalize-space(.)}">
                     <xsl:copy-of select="@scheme|@http-equiv|@lang|@dir"/>
                     <xsl:if test="@xml:lang">
                         <xsl:attribute name="lang" select="@xml:lang"/>
                     </xsl:if>
                 </meta>
-            </xsl:for-each>
-
-            <meta name="dcterms:modified" content="{$modified}"/>
-        </head>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:message select="concat('meta element &quot;',$name,'&quot; was omitted')"/>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
+    <xsl:variable name="allowed-meta" as="xs:string*"
+                  select="('dc:contributor',
+                           'dc:coverage',
+                           'dc:creator',
+                           'dc:date',
+                           'dc:description',
+                           'dc:format',
+                           'dc:identifier',
+                           'dc:language',
+                           'dc:publisher',
+                           'dc:relation',
+                           'dc:rights',
+                           'dc:source',
+                           'dc:subject',
+                           'dc:title',
+                           'dc:type',
+                           'ncc:charset',
+                           'ncc:depth',
+                           'ncc:files',
+                           'ncc:footnotes',
+                           'ncc:generator',
+                           'ncc:kByteSize',
+                           'ncc:maxPageNormal',
+                           'ncc:multimediaType',
+                           'ncc:narrator',
+                           'ncc:pageFront',
+                           'ncc:pageNormal',
+                           'ncc:pageSpecial',
+                           'ncc:prodNotes',
+                           'ncc:producedDate',
+                           'ncc:producer',
+                           'ncc:revision',
+                           'ncc:revisionDate',
+                           'ncc:setInfo',
+                           'ncc:sidebars',
+                           'ncc:sourceDate',
+                           'ncc:sourceEdition',
+                           'ncc:sourcePublisher',
+                           'ncc:sourceRights',
+                           'ncc:sourceTitle',
+                           'ncc:tocItems',
+                           'ncc:totalTime'
+                           )"/>
+    
 </xsl:stylesheet>
