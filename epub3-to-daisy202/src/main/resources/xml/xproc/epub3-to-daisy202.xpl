@@ -111,18 +111,18 @@ You may alternatively use the EPUB package document (the OPF-file) if your input
                     
                     <px:epub3-to-daisy202 name="convert">
                         <p:input port="source.fileset">
-                            <p:pipe port="fileset.out" step="load"/>
+                            <p:pipe step="load" port="result.fileset"/>
                         </p:input>
                         <p:input port="source.in-memory">
-                            <p:pipe port="in-memory.out" step="load"/>
+                            <p:pipe step="load" port="result.in-memory"/>
                         </p:input>
                     </px:epub3-to-daisy202>
         
                     <px:epub3-to-daisy202.store name="store">
-                        <p:input port="fileset.in">
+                        <p:input port="source.fileset">
                             <p:pipe step="convert" port="result.fileset"/>
                         </p:input>
-                        <p:input port="in-memory.in">
+                        <p:input port="source.in-memory">
                             <p:pipe step="convert" port="result.in-memory"/>
                         </p:input>
                         <p:with-option name="output-dir" select="$output-dir"/>
