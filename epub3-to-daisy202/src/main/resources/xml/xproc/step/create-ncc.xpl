@@ -143,6 +143,21 @@
                     <p:pipe step="ncc-items" port="current"/>
                 </p:with-option>
             </p:wrap-sequence>
+            <p:add-attribute match="/*" attribute-name="id">
+                <p:with-option name="attribute-value" select="concat('_',p:iteration-position())"/>
+            </p:add-attribute>
+            <p:choose>
+                <p:when test="p:iteration-position()=1">
+                    <p:add-attribute match="/*" attribute-name="class" attribute-value="title">
+                        <p:documentation>
+                            First entry must be a h1 with class "title".
+                        </p:documentation>
+                    </p:add-attribute>
+                </p:when>
+                <p:otherwise>
+                    <p:identity/>
+                </p:otherwise>
+            </p:choose>
             <p:add-attribute match="/*/html:a" attribute-name="href">
                 <p:with-option name="attribute-value"
                                select="concat(substring(/*/base-uri(),$ncc-base-dir-string-length + 1),'#',/*/@id)">

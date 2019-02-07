@@ -101,13 +101,13 @@
             <x:document type="inline" xmlns="http://www.w3.org/1999/xhtml">
                 <html lang="">
                     <body>
-                        <h1>
+                        <h1 class="title" id="_1">
                             <a href="chapter_001.smil#heading1">Chapter 1</a>
                         </h1>
-                        <h2>
+                        <h2 id="_2">
                             <a href="chapter_001.smil#par_c1-1">Chapter 1.1</a>
                         </h2>
-                        <h1>
+                        <h1 id="_3">
                             <a href="chapter_002.smil#par_c2">Chapter 2</a>
                         </h1>
                     </body>
