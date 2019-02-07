@@ -22,7 +22,6 @@
 
     <p:import href="http://www.daisy.org/pipeline/modules/common-utils/library.xpl">
         <p:documentation>
-            px:message
             px:assert
         </p:documentation>
     </p:import>
@@ -77,12 +76,9 @@
             <p:pipe step="main" port="source.in-memory"/>
         </p:input>
     </px:fileset-load>
-    <p:for-each>
+    <p:for-each px:message="Converting SMIL-file from 3.0 (EPUB3 MO profile) to 1.0 (DAISY 2.02 profile)">
         <p:variable name="smil-original-base" select="base-uri(/*)"/>
-        <px:message message="converting SMIL-file from 3.0 (EPUB3 MO profile) to 1.0 (DAISY 2.02 profile): $1">
-            <p:with-option name="param1" select="$smil-original-base"/>
-        </px:message>
-        <p:xslt>
+        <p:xslt px:message="- {$smil-original-base}" px:message-severity="DEBUG">
             <p:input port="parameters">
                 <p:empty/>
             </p:input>
@@ -113,7 +109,9 @@
             <p:pipe step="main" port="source.in-memory"/>
         </p:input>
     </px:fileset-load>
-    <p:for-each>
+    <p:for-each px:message="Converting HTML5 to HTML4">
+        <p:variable name="base-uri" select="base-uri()"/>
+        <p:identity px:message="- {$base-uri}" px:message-severity="DEBUG"/>
         <p:xslt>
             <p:documentation>
                 Normalize HTML5.
@@ -186,7 +184,7 @@
     <p:documentation>
         Create NCC file.
     </p:documentation>
-    <pxi:create-ncc name="create-ncc">
+    <pxi:create-ncc name="create-ncc" px:message="Creating NCC">
         <p:input port="source.in-memory">
             <p:pipe port="result" step="daisy202.xhtml.in-memory"/>
             <p:pipe port="result" step="daisy202.smil.in-memory"/>
@@ -199,7 +197,7 @@
     <p:documentation>
         Rename content documents to .html.
     </p:documentation>
-    <p:group name="rename-xhtml">
+    <p:group name="rename-xhtml" px:message="Renaming content documents to .html">
         <p:output port="result.fileset" primary="true"/>
         <p:output port="result.in-memory" sequence="true">
             <p:pipe step="xhtml" port="result"/>

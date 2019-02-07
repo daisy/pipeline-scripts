@@ -179,7 +179,7 @@
             <p:pipe step="main" port="source.in-memory"/>
         </p:input>
     </px:fileset-load>
-    <p:for-each name="augment-smils">
+    <p:for-each name="augment-smils" px:message="Augmenting SMILs" px:message-severity="DEBUG">
         <p:output port="smil" sequence="true">
             <p:pipe step="smil" port="result"/>
         </p:output>
@@ -222,7 +222,7 @@
             </p:input>
         </px:fileset-load>
         <p:documentation>Augment the SMIL.</p:documentation>
-        <p:xslt>
+        <p:xslt px:message="- {$smil-base}" px:message-severity="DEBUG">
             <p:input port="source">
                 <p:pipe step="augment-smils" port="current"/>
                 <p:pipe step="associated-xhtml" port="result"/>
@@ -249,6 +249,8 @@
                 <p:pipe step="associated-xhtml" port="result"/>
             </p:iteration-source>
             <p:output port="result" sequence="true"/>
+            <p:variable name="base-uri" select="base-uri()"/>
+            <p:identity px:message="Adding linkbacks to {$base-uri}" px:message-severity="DEBUG"/>
             <p:xslt>
                 <p:input port="source">
                     <p:pipe step="xhtml-with-linkbacks" port="current"/>
@@ -301,6 +303,8 @@
         <p:output port="xhtml" sequence="true">
             <p:pipe step="xhtml-with-linkbacks" port="result"/>
         </p:output>
+        <p:variable name="base-uri" select="base-uri()"/>
+        <p:identity px:message="Creating new SMIL for {$base-uri}" px:message-severity="DEBUG"/>
         <px:set-base-uri name="empty-smil">
             <p:input port="source">
                 <p:inline>
@@ -393,7 +397,7 @@
     <p:documentation>
         Make anchors in NCC point to SMILs.
     </p:documentation>
-    <p:group>
+    <p:group px:message="Creating linkbacks for NCC" px:message-severity="DEBUG">
         <p:xslt>
             <p:input port="source">
                 <p:pipe step="ncc" port="result"/>
