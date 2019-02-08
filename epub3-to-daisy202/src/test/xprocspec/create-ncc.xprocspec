@@ -25,6 +25,7 @@
                                 <section>
                                     <h2 id="c1-1">Chapter 1.1</h2>
                                 </section>
+                                <span id="page1" class="page-normal">1</span>
                                 <p id="c1_p2">...</p>
                             </section>
                         </body>
@@ -101,13 +102,16 @@
             <x:document type="inline" xmlns="http://www.w3.org/1999/xhtml">
                 <html lang="">
                     <body>
-                        <h1 class="title" id="_1">
+                        <h1 id="_1" class="title">
                             <a href="chapter_001.smil#heading1">Chapter 1</a>
                         </h1>
                         <h2 id="_2">
                             <a href="chapter_001.smil#par_c1-1">Chapter 1.1</a>
                         </h2>
-                        <h1 id="_3">
+                        <span id="_3" class="page-normal">
+                            <a href="chapter_001.smil#par_page1">1</a>
+                        </span>
+                        <h1 id="_4">
                             <a href="chapter_002.smil#par_c2">Chapter 2</a>
                         </h1>
                     </body>
@@ -133,6 +137,9 @@
                                     <a href="chapter_001.smil#par_c1-1">Chapter 1.1</a>
                                 </h2>
                             </section>
+                            <span id="page1" class="page-normal">
+                                <a href="chapter_001.smil#par_page1">1</a>
+                            </span>
                             <p id="c1_p2">
                                 <a href="chapter_001.smil#paragraph2">...</a>
                             </p>
@@ -176,6 +183,9 @@
                             </par>
                             <par id="par_c1-1">
                                 <text src="chapter_001.xhtml#c1-1"/>
+                            </par>
+                            <par id="par_page1">
+                                <text src="chapter_001.xhtml#page1"/>
                             </par>
                             <par id="paragraph2">
                                 <text src="chapter_001.xhtml#c1_p2"/>

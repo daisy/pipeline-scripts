@@ -120,9 +120,9 @@
                             self::html:h3 or
                             self::html:h4 or
                             self::html:h5 or
-                            self::html:h6
+                            self::html:h6 or
+                            self::html:span[matches(@class,'(^|\s)page-(front|normal|special)(\s|$)')]
                             ]">
-                    <!-- or self::html:span[matches(@class,'(^|\s)page-(front|normal|special)(\s|$)')] -->
                 <p:pipe step="xhtml-with-ids" port="result"/>
             </p:iteration-source>
             <p:string-replace match="/*/text()">
@@ -151,7 +151,15 @@
                     <p:add-attribute match="/*" attribute-name="class" attribute-value="title">
                         <p:documentation>
                             First entry must be a h1 with class "title".
+                            FIXME: check that it is actually a h1 and not e.g. a page number
                         </p:documentation>
+                    </p:add-attribute>
+                </p:when>
+                <p:when test="/html:span">
+                    <p:add-attribute match="/*" attribute-name="class">
+                        <p:with-option name="attribute-value" select="/*/@class">
+                            <p:pipe step="ncc-items" port="current"/>
+                        </p:with-option>
                     </p:add-attribute>
                 </p:when>
                 <p:otherwise>

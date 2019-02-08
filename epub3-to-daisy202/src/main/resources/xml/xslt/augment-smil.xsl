@@ -48,7 +48,8 @@
                                           self::html:h3 or
                                           self::html:h4 or
                                           self::html:h5 or
-                                          self::html:h6]">
+                                          self::html:h6 or
+                                          self::html:span[matches(@class,'(^|\s)page-(front|normal|special)(\s|$)')]]">
                     <xsl:variable name="id" as="xs:string" select="@id"/>
                     <xsl:variable name="absolute-id" select="concat($html-base-uri,'#',$id)"/>
                     <xsl:choose>
@@ -73,14 +74,19 @@
                         <xsl:otherwise>
                             <!-- in case there are multiple html files and colliding ids, add a suffix -->
                             <xsl:variable name="par-id" as="xs:string"
-                                          select="concat('par_',$id,
-                                                         if (count($html//*[self::html:h1 or self::html:h2 or
-                                                                            self::html:h3 or self::html:h4 or
-                                                                            self::html:h5 or self::html:h6]
-                                                                           [@id=$id]
-                                                                   )&gt;1)
-                                                           then concat('_',generate-id(.))
-                                                           else '')"/>
+                                          select="concat(
+                                                    'par_',$id,
+                                                    if (
+                                                      count(
+                                                        $html//*[self::html:h1 or self::html:h2 or
+                                                                 self::html:h3 or self::html:h4 or
+                                                                 self::html:h5 or self::html:h6 or
+                                                                 self::html:span[
+                                                                   matches(@class,'(^|\s)page-(front|normal|special)(\s|$)')]]
+                                                                [@id=$id]
+                                                      )&gt;1
+                                                    ) then concat('_',generate-id(.))
+                                                      else '')"/>
                             <par id="{$par-id}">
                                 <text src="{pf:relativize-uri(concat($html-base-uri,'#',$id),$smil-base-uri)}"/>
                             </par>
