@@ -47,11 +47,7 @@
         <p:with-option name="temp-dir" select="$temp-dir"/>
     </px:epub3-load>
     
-    <!--
-        FIXME: px:fileset-move, which we use later in this conversion, for some reason doesn't add
-        original-href attributes, so we do it here already.
-    -->
-    <p:label-elements match="d:file" attribute="original-href" label="resolve-uri(@href,base-uri(.))" name="fileset"/>
+    <p:identity name="fileset"/>
     
     <p:choose name="validate">
         <p:when test="$validation='off'">
