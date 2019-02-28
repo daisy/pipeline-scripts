@@ -7,12 +7,12 @@
     <groupId>org.daisy</groupId>
     <artifactId>daisy</artifactId>
     <version>4</version>
-    <relativePath/>
+    <relativePath />
   </parent>
 
   <groupId>org.daisy.pipeline.modules</groupId>
     <artifactId>scripts-aggregator</artifactId>
-  <version>1.12.0-SNAPSHOT</version>
+  <version>1.12.0</version>
   <packaging>pom</packaging>
 
   <name>DAISY Pipeline 2 :: Aggregator POM for the Default Scripts</name>
@@ -72,4 +72,8 @@
       </plugin>
     </plugins>
   </build>
+
+  <scm>
+    <tag>v1.12.0</tag>
+  </scm>
 </project>
