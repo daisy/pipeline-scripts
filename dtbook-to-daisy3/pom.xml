@@ -301,6 +301,32 @@
             <target.dir>${project.build.directory}</target.dir>
           </systemPropertyVariables>
         </configuration>
+        <!--
+            for some reason XProcSpecTest fails with OSGi if FullConversionTest is also present,
+            therefore run them in separate phases
+        -->
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <configuration>
+              <excludes>
+                <exclude>**/FullConversionTest.java</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+          <execution>
+            <id>FullConversionTest</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/FullConversionTest.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
